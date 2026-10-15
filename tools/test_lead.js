@@ -1,0 +1,10 @@
+const L=require("../assets/js/lead.js");let f=0;const t=(c,m)=>{if(!c){f++;console.log("FAIL",m)}};
+t(L.phoneOk("9876543210")&&L.phoneOk("+91 98765 43210")&&L.phoneOk("098765 43210")&&L.phoneOk("+44 7911 123456"),"valid phones");
+t(!L.phoneOk("12345")&&!L.phoneOk("5876543210")&&!L.phoneOk("abcdefghij"),"invalid phones");
+let e=L.validate({name:"",phone:"1",email:"x@y",service:"other",other:""});t(e.name&&e.phone&&e.email&&e.other,"all errors");
+t(Object.keys(L.validate({name:"A",phone:"9876543210",email:"",service:"meta-ads"})).length===0,"valid passes");
+t(L.validate({name:"A",phone:"9876543210",service:"other",other:" "}).other,"other required");
+const m=L.message({name:"Ravi",phone:"9876543210",email:"r@x.com",company:"Co",service:"other",other:"Podcast",budget:"Under ₹10,000",message:"Hi"},"x");
+t(/Other: Podcast/.test(m)&&/Company: Co/.test(m)&&/Budget/.test(m)&&/Email: r@x.com/.test(m),"message fields");
+const u=L.waUrl("+919705570007",m);t(u.startsWith("https://wa.me/919705570007?text=")&&decodeURIComponent(u.split("text=")[1])===m,"wa url roundtrip");
+console.log(f?f+" failed":"lead.js: all tests passed");process.exit(f?1:0);

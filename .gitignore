@@ -1,0 +1,6 @@
+__pycache__/
+reports/
+.lighthouseci/
+node_modules/
+.DS_Store
+.vercel/

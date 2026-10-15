@@ -1,0 +1,4 @@
+Contact: mailto:info.heidigi@gmail.com
+Preferred-Languages: en, te
+Expires: 2027-10-15T00:00:00Z
+Canonical: https://heidigi.com/.well-known/security.txt

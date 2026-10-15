@@ -1,0 +1,31 @@
+{
+ "name": "Hei Digi",
+ "domain": "https://heidigi.com",
+ "email": "info.heidigi@gmail.com",
+ "phone": "+919705570007",
+ "phoneDisplay": "+91 97055 70007",
+ "city": "Tirupati",
+ "region": "Andhra Pradesh",
+ "country": "IN",
+ "socials": [],
+ "gptbot": "allow",
+ "analytics": {
+  "ga4": "",
+  "plausibleDomain": ""
+ },
+ "leadEndpoint": "",
+ "turnstileSiteKey": "",
+ "hstsMaxAge": 300,
+ "legalUpdated": "2026-10-09",
+ "address": {
+  "streetAddress": "18-1-45/4, HeiDigi, KT Rd, near More Super Market, Srinivasa Nagar, Shanthi Nagar, Khadi Colony",
+  "addressLocality": "Tirupati",
+  "addressRegion": "Andhra Pradesh",
+  "postalCode": "517507",
+  "addressCountry": "IN"
+ },
+ "mapsUrl": "https://www.google.com/maps/dir/?api=1&destination=18-1-45%2F4%2C+HeiDigi%2C+KT+Rd%2C+near+More+Super+Market%2C+Srinivasa+Nagar%2C+Shanthi+Nagar%2C+Khadi+Colony%2C+Tirupati%2C+Andhra+Pradesh+517507",
+ "founder": "Coach Sri",
+ "founderSocial": "https://www.instagram.com/coachshri_/",
+ "developer": "Gorinta Sandeep Sahay"
+}

@@ -1,0 +1,2 @@
+# Static-site build dependency; pinned for repeatable local/Vercel builds.
+Pillow==12.3.0

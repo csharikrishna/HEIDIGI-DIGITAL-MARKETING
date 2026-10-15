@@ -1,0 +1,13 @@
+# Search crawlers (Googlebot, Bingbot and others) may crawl everything
+User-agent: *
+Allow: /
+
+# ChatGPT Search: keep allowed so the site can appear in ChatGPT search answers
+User-agent: OAI-SearchBot
+Allow: /
+
+# GPTBot (model training) is a separate choice: set "gptbot" in site.config.json
+User-agent: GPTBot
+Allow: /
+
+Sitemap: https://heidigi.com/sitemap.xml

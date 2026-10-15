@@ -1,0 +1,54 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "python3 -m http.server 8080 --directory dist",
+      "startServerReadyPattern": "Serving HTTP",
+      "url": [
+        "http://localhost:8080/",
+        "http://localhost:8080/services/meta-ads/",
+        "http://localhost:8080/privacy/"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ]
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "categories:accessibility": [
+          "warn",
+          {
+            "minScore": 0.95
+          }
+        ],
+        "categories:best-practices": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "categories:seo": [
+          "warn",
+          {
+            "minScore": 0.95
+          }
+        ]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/mobile"
+    }
+  }
+}

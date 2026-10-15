@@ -1,0 +1,16 @@
+# Vercel serves only `dist/` as static output. Keep project-only research and QA material out of deployment uploads.
+docs/
+reports/
+.lighthouseci/
+__pycache__/
+*.pyc
+node_modules/
+.git/
+.github/
+# Build/test utilities are not deployed as public static files.
+tools/test_*.py
+tools/test_*.js
+tools/browser_*.py
+tools/crawl_links.py
+tools/perf_probe.py
+tools/_server.py

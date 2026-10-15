@@ -1,0 +1,41 @@
+name: Quality
+on: [push, pull_request, workflow_dispatch]
+permissions: { contents: read }
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - name: Install dependencies and the Chromium browser with its system libraries
+        run: |
+          python -m pip install --upgrade pip pillow playwright
+          python -m playwright install --with-deps chromium
+      - name: Build, audit, unit tests, link crawl, browser tests
+        run: python tools/run_all.py
+      - name: Publish report
+        if: always()
+        run: cat reports/quality-report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: quality-report, path: reports/ }
+  lighthouse:
+    # Records real Lighthouse results (mobile and desktop). Assertions are warnings until you have a baseline; tighten them in lighthouserc.*.json.
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - name: Lighthouse (mobile)
+        run: npx --yes @lhci/cli@0.14.x autorun --config=lighthouserc.mobile.json
+      - name: Lighthouse (desktop)
+        run: npx --yes @lhci/cli@0.14.x autorun --config=lighthouserc.desktop.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: lighthouse-reports, path: .lighthouseci/ }
