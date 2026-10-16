@@ -78,6 +78,20 @@ The Hei Digi website was upgraded from a static prototype with cross-platform bu
 - **`.gitignore` Optimization**: Changed `reports/` to `/reports/` (root-only) so that `docs/reports/` is tracked while temporary test execution reports remain ignored. Added `repo_report.pdf` to ignore.
 - **Documentation Restoration**: Re-authored and committed `docs/reports/SEO-AND-IMPLEMENTATION-REPORT.md` and `docs/reports/SEO-COMPETITOR-RESEARCH.md` referenced in `README.md`.
 
+### 3.6. South Andhra Pradesh Regional SEO & Location Expansion
+- **Regional Footprint Expansion (41 → 45 Pages)**: Expanded local landing pages from 3 to 7 strategic commercial and pilgrimage hubs across South Andhra Pradesh:
+  1. **Tirupati** (`/locations/tirupati/`): Primary metro and pilgrimage economic engine.
+  2. **Srikalahasti** (`/locations/srikalahasti/`): Temple tourism, brass handicrafts, and Kalamkari textile exports.
+  3. **Chittoor** (`/locations/chittoor/`): District administrative hub, agro-industries, dairy, and mango processing.
+  4. **Renigunta** (`/locations/renigunta/`): Industrial corridor, international airport, logistics, and rail junction.
+  5. **Chandragiri** (`/locations/chandragiri/`): Higher educational institutions and residential commercial corridor.
+  6. **Madanapalle** (`/locations/madanapalle/`): Western Rayalaseema agricultural marketplace, silk manufacturing, and healthcare.
+  7. **Nellore** (`/locations/nellore/`): South Coastal economic powerhouse, aquaculture, gold retail, and medical services.
+- **Service Areas Hub Page (`/locations/`)**: Upgraded heading, introduction, title (`Digital Marketing in Tirupati & South AP | Hei Digi`), and description to emphasize comprehensive South Andhra Pradesh coverage.
+- **Organization Schema (`areaServed`)**: Enriched `areaServed` array in the `ProfessionalService` JSON-LD schema across all 45 pages to include 9 local cities plus `South Andhra Pradesh` and `Rayalaseema` administrative regions.
+- **Geographic Placename**: Updated `<meta name="geo.placename">` to `Tirupati, South Andhra Pradesh` across all pages.
+- **Internal Linking Network**: Added `Service Areas` to the global footer navigation, ensuring strong topical link equity flows to all regional location pages.
+
 ---
 
 ## 4. Test Verification & Proof of Quality
@@ -97,20 +111,20 @@ Result: **PASSED WITH SKIPS** (8 passed, 0 failed, 1 skipped)
 
 | Step | Critical | Result | Duration |
 |---|---|---|---|
-| 1. Rebuild from source (`build.py`) | yes | PASS | 0.7s |
+| 1. Rebuild from source (`build.py`) | yes | PASS | 0.6s |
 | 2. Generated file parity (`before == after`) | yes | PASS | 0.0s |
-| 3. Static audit (`tools/audit.py`) | yes | PASS | 0.9s |
-| 4. Optional build modes and CSP (`tools/test_build_modes.py`) | yes | PASS | 4.2s |
+| 3. Static audit (`tools/audit.py`) | yes | PASS | 1.2s |
+| 4. Optional build modes and CSP (`tools/test_build_modes.py`) | yes | PASS | 4.6s |
 | 5. Form validation logic (`tools/test_lead.js`) | yes | PASS | 0.1s |
 | 6. Serverless Enquiry API (`tools/test_api.js`) | yes | PASS | 0.1s |
-| 7. JavaScript syntax (`node --check`) | yes | PASS | 0.5s |
+| 7. JavaScript syntax (`node --check`) | yes | PASS | 0.6s |
 | 8. Internal link crawl (`tools/crawl_links.py`) | yes | PASS | 0.6s |
 | 9. Browser tests (Playwright Chromium) | no | SKIP | 0.0s (Runs in CI) |
 ```
 
 ### Granular Quality Metrics
-- **Static Audit Assertions**: Expanded from 3,063 to **3,404 automated checks** — **3,404 passed, 0 failed**.
-- **Internal Link Crawler**: Crawled 93 distinct internal URLs — **0 broken links, 0 redirect loops, 404 handler verified**.
+- **Static Audit Assertions**: Expanded from 3,404 to **3,758 automated checks** across 45 pages — **3,758 passed, 0 failed**.
+- **Internal Link Crawler**: Crawled **97 distinct internal URLs** — **0 broken links, 0 redirect loops, 404 handler verified**.
 - **Serverless API Tests**: 24/24 mocked security scenarios passed (origin validation, honeypot traps, payload sizes, UTF-8 Telugu sanitization, rate limiting).
 - **CSP Integrity**: Validated strict `default-src 'self'` policy across default, Turnstile, GA4, Plausible, and custom-domain modes.
 

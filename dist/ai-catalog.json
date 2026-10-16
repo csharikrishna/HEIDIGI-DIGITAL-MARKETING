@@ -71,10 +71,59 @@
       "url": "https://heidigi.com/services/content-strategy/"
     },
     {
+      "identifier": "urn:ai:heidigi.com:location:tirupati",
+      "displayName": "Digital Marketing in Tirupati",
+      "type": "text/html",
+      "description": "Tirupati businesses serve residents, pilgrims, students, patients and nearby towns. The right marketing mix depends on who you need to reach and what they need to know before contacting you.",
+      "url": "https://heidigi.com/locations/tirupati/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:location:chittoor",
+      "displayName": "Digital Marketing in Chittoor",
+      "type": "text/html",
+      "description": "Businesses in Chittoor need marketing that reflects their real service area, not a page that swaps one town name for another. We plan the message around the products, services and customers the business actually serves.",
+      "url": "https://heidigi.com/locations/chittoor/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:location:renigunta",
+      "displayName": "Digital Marketing in Renigunta",
+      "type": "text/html",
+      "description": "Renigunta businesses may serve local residents, travellers or customers moving between nearby towns. Useful marketing starts by stating what the business offers, where it operates and how customers can reach the team.",
+      "url": "https://heidigi.com/locations/renigunta/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:location:srikalahasti",
+      "displayName": "Digital Marketing in Srikalahasti",
+      "type": "text/html",
+      "description": "Srikalahasti is a major pilgrim and commercial center in South Andhra Pradesh, famous for its historic temple, brass handicrafts, Kalamkari textiles and local retail. Businesses here need marketing that captures both steady visitor intent and loyal local trade.",
+      "url": "https://heidigi.com/locations/srikalahasti/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:location:chandragiri",
+      "displayName": "Digital Marketing in Chandragiri",
+      "type": "text/html",
+      "description": "Located just west of Tirupati, Chandragiri is an educational, agricultural and commercial gateway with colleges, residential communities and growing small enterprises. Marketing in Chandragiri requires building trust with local families and students.",
+      "url": "https://heidigi.com/locations/chandragiri/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:location:madanapalle",
+      "displayName": "Digital Marketing in Madanapalle",
+      "type": "text/html",
+      "description": "Madanapalle is a bustling commercial powerhouse in western South Andhra Pradesh, celebrated as Asia's largest tomato trading market and a thriving center for silk weaving, healthcare and higher education.",
+      "url": "https://heidigi.com/locations/madanapalle/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:location:nellore",
+      "displayName": "Digital Marketing in Nellore",
+      "type": "text/html",
+      "description": "As the economic powerhouse of South Coastal Andhra Pradesh, Nellore is known for aquaculture, retail gold trade, healthcare excellence, agriculture and thriving industrial infrastructure along the Chennai-Kolkata corridor.",
+      "url": "https://heidigi.com/locations/nellore/"
+    },
+    {
       "identifier": "urn:ai:heidigi.com:service:contact",
       "displayName": "Contact & Business Consultation",
       "type": "text/html",
-      "description": "Direct enquiry and digital marketing consultation for businesses in Tirupati and Andhra Pradesh.",
+      "description": "Direct enquiry and digital marketing consultation for businesses in Tirupati and South Andhra Pradesh.",
       "url": "https://heidigi.com/contact/"
     }
   ]

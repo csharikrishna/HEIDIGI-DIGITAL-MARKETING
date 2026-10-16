@@ -1,166 +1,182 @@
 {
  "/": {
-  "hash": "be74bbfb10c860db4b82141704099b418e538978",
+  "hash": "eb13d2bc464204090ad4e3046b60ac03026de532",
   "lastmod": "2026-10-16"
  },
  "/services/social-media-marketing/": {
-  "hash": "33556595cc2ef8a63b1f83dbe962fb78d9a5cedd",
+  "hash": "1ee25ce19eb8782998d1ab23075c6705b2bceced",
   "lastmod": "2026-10-16"
  },
  "/services/google-business-profile-management/": {
-  "hash": "84df74e0bfbea11cff90adb73c24f97a363237d4",
+  "hash": "b497157ac1a5170b2219cea91295f7c091b71c3d",
   "lastmod": "2026-10-16"
  },
  "/services/meta-ads/": {
-  "hash": "a82faaf7d42a104569fd3fc12e42b8abcc829fcb",
+  "hash": "4489785ff131b60f2f0c64b4762cb38ed00b6ce7",
   "lastmod": "2026-10-16"
  },
  "/services/creative-design/": {
-  "hash": "dfc8f2ad2e92fa6199cdda0c023f548c80328e2b",
+  "hash": "52ce3205c9bdb85c12689a1113d70cf03c5e3580",
   "lastmod": "2026-10-16"
  },
  "/services/video-editing-ai-videos/": {
-  "hash": "36af4d340bf88533b4da7dc2a37c17206331357f",
+  "hash": "7d015e358afefe3998b6e7c7b97b529573824ef5",
   "lastmod": "2026-10-16"
  },
  "/services/branding/": {
-  "hash": "1f090c37d4eff478b1cbb61db02bcc51cfbe24b5",
+  "hash": "1409807c4857546ded833cc3d238fe4ffd3c56a1",
   "lastmod": "2026-10-16"
  },
  "/services/personal-branding/": {
-  "hash": "2de95dab9394f98aba86a52fb5ebca477439a617",
+  "hash": "f38c0dd7218605a288fd5fcc1df42c751e988cd1",
   "lastmod": "2026-10-16"
  },
  "/services/content-strategy/": {
-  "hash": "f5705ed2ef5ba693d4c06e33591ecd2dea1df604",
+  "hash": "7ccf2fdf8071b8b3a56e08b40924945ba09a1de5",
   "lastmod": "2026-10-16"
  },
  "/services/": {
-  "hash": "60e1e8b8c6681de197ab0dce0037d9106354a954",
+  "hash": "9be8482414989b521f3706007893b85e085a3735",
   "lastmod": "2026-10-16"
  },
  "/privacy/": {
-  "hash": "d6cec3f8aefb35a6b3f2fc3fd1a047ea7daa3d4e",
+  "hash": "b0ca27b6575aee08bdd357a30323ba693c44aaff",
   "lastmod": "2026-10-16"
  },
  "/terms/": {
-  "hash": "91d5da333d2fa6980d0f11cfd1b820e3a851a855",
+  "hash": "b72eade44b947a63705ed62b365230f7389872fd",
   "lastmod": "2026-10-16"
  },
  "/work/bni-networking-conclave-leads/": {
-  "hash": "c4152fd1dcbfef12a96a13677333ac49afb2155d",
+  "hash": "6fd6f41c504cd1c9b5a0983bcbb82d5addf861c9",
   "lastmod": "2026-10-16"
  },
  "/services/seo/": {
-  "hash": "245566438b94b72339c530c0e5db495ebda04c4b",
+  "hash": "067ef3332c174efb07359778f773709c2b300669",
   "lastmod": "2026-10-16"
  },
  "/about/": {
-  "hash": "87575e735cd67c6dec4adf19e42a9368eff55935",
+  "hash": "93495342c78702e45ace7f714a274c11a62ff735",
   "lastmod": "2026-10-16"
  },
  "/contact/": {
-  "hash": "559ba9e7f250357e8edfe818e07d9c434bb74eec",
+  "hash": "e33a79431ce0756b0fc35bf8565bcce2125bd159",
   "lastmod": "2026-10-16"
  },
  "/blog/": {
-  "hash": "cda8c6768ee9a172bf2918d81deee8606fb06048",
+  "hash": "6622fbaf810d5ff43ee9519708d06de0702edbdd",
   "lastmod": "2026-10-16"
  },
  "/blog/local-seo-tirupati-business/": {
-  "hash": "8bb02bd452cad2413ecbbbb7ba28707b4d6d8657",
+  "hash": "072ff203cc008c9e5b728cc40bcecd490d073f13",
   "lastmod": "2026-10-16"
  },
  "/blog/google-business-profile-hospitals/": {
-  "hash": "d7834afe770d8f5c04d205af574831b4866d1f6e",
+  "hash": "19375c1248b92f551c0d7366ca7e7c57aed6361a",
   "lastmod": "2026-10-16"
  },
  "/blog/meta-ads-schools/": {
-  "hash": "4a063ebe9873b2d00de2ae9873096ca53e4d785c",
+  "hash": "ffd46351bc22a8285a6f2ff49140b34ba12c6a01",
   "lastmod": "2026-10-16"
  },
  "/blog/digital-marketing-cost-tirupati/": {
-  "hash": "aa5ab261a4fc4cf4010a81689a35b4b19641bd47",
+  "hash": "f5508664ce441e34a22573f235d067dce056e2a5",
   "lastmod": "2026-10-16"
  },
  "/blog/social-media-calendar-local-business/": {
-  "hash": "05dd64b2abd43f85dd8a928e662f29f9176ce8dc",
+  "hash": "ba4609e5ffa372ffff93a6e3050984bd2be1e981",
   "lastmod": "2026-10-16"
  },
  "/blog/google-ads-vs-meta-ads/": {
-  "hash": "a358783226c38927a7ad5e7c4654da1f6c5c9687",
+  "hash": "c7e27b67b530a6e9f62f5243930943863b55bd92",
   "lastmod": "2026-10-16"
  },
  "/blog/personal-branding-doctors/": {
-  "hash": "8ea4c8ae72bd302cfc285e7084d6fa51ff9dba1b",
+  "hash": "c799e5f7964bec937d79909a7b5f0a33a94b1ffc",
   "lastmod": "2026-10-16"
  },
  "/blog/monthly-marketing-report/": {
-  "hash": "19fd8b43e090a77376c8b99708a15620b9bb7ec2",
+  "hash": "7ac51fd9036b1ad60aa551306e2a1b720f7e70a6",
   "lastmod": "2026-10-16"
  },
  "/blog/seo-checklist-schools/": {
-  "hash": "f06fc55c393dd284d325c61d23ef239b88a289c9",
+  "hash": "4365f514c26d6f9fb26bc236129b6676e228ab29",
   "lastmod": "2026-10-16"
  },
  "/blog/video-content-construction-business/": {
-  "hash": "a431b92432369f66f26480bd491d3684a471037a",
+  "hash": "dd00aeeb2e91fbec698bb1d21b5b96e4f728451a",
   "lastmod": "2026-10-16"
  },
  "/blog/google-business-profile-posts/": {
-  "hash": "278fd81ebe3dbd0a8606671d803b88c6f28a85f8",
+  "hash": "17e22be73f4b77096dcd72a41fb5880820d7ed76",
   "lastmod": "2026-10-16"
  },
  "/industries/": {
-  "hash": "e535d0ca8c1ad03256c352ef33dd78697be8964f",
+  "hash": "39646aa52e6575cd45a3ff1b708a3b362cd3430b",
   "lastmod": "2026-10-16"
  },
  "/industries/healthcare/": {
-  "hash": "88331b954607479d235f2aa278d95844f3057597",
+  "hash": "e989a1713c3a400686ec195ba4c6a64db9331809",
   "lastmod": "2026-10-16"
  },
  "/industries/education/": {
-  "hash": "7fd5bd259a3c172bdede5892a7c9770182744def",
+  "hash": "f9ae915c2b76ad7747d71b0f39ff2aa10b8e5714",
   "lastmod": "2026-10-16"
  },
  "/industries/steel-construction/": {
-  "hash": "994862f4ef5457f3ccc6187296e32ad7c41a1267",
+  "hash": "d4b72e0d50349d00dca0d0946957188c821487e3",
   "lastmod": "2026-10-16"
  },
  "/industries/hospitality/": {
-  "hash": "d0afc90c66ff26b777c8f985186b52ec865a7587",
+  "hash": "e85ad20f78449e1e53d90c4080843b92894c81fd",
   "lastmod": "2026-10-16"
  },
  "/industries/professional-services/": {
-  "hash": "b9d77c5de67c93dba4e9c5b7a4feecc74db9d7db",
+  "hash": "987cf60db8771aded25a6654333b8ab5b85b52bd",
   "lastmod": "2026-10-16"
  },
  "/locations/": {
-  "hash": "f4bc27ae7453752d67cb24983ad0c0dfbe2eaf2a",
+  "hash": "f45d4c142c0e24fd45930966b2ea7a7809e8331c",
   "lastmod": "2026-10-16"
  },
  "/locations/tirupati/": {
-  "hash": "88ab4626943c94e1e3cbd670ffe2256c5fb13502",
+  "hash": "a6c6e3fdeaf6eef8f9c74908e533220b817be229",
   "lastmod": "2026-10-16"
  },
  "/locations/chittoor/": {
-  "hash": "b04babc6fc0998edf12c9c0248884f7bebd9c679",
+  "hash": "5ba6a30d6c7d8829818b6dedc6c943fac484a43b",
   "lastmod": "2026-10-16"
  },
  "/locations/renigunta/": {
-  "hash": "cc9c6743d3db23d43e44ce2444450689ed63acc5",
+  "hash": "a6f9a5c0c911cfa9974396f7078e42e2734c0f20",
   "lastmod": "2026-10-16"
  },
  "/cookie-policy/": {
-  "hash": "fa8506fdd7567e2232b2e79d5e47113ec36b70c7",
+  "hash": "8c85e8eaa8a2191293597a7b5edbaf40e0aae775",
   "lastmod": "2026-10-16"
  },
  "/disclaimer/": {
-  "hash": "7c3eab21ba9505d27618643a6e12313ca9d938cc",
+  "hash": "1885484c029f6e95cca06ea69005bbb9eed4ed15",
   "lastmod": "2026-10-16"
  },
  "/work/coach-sri-personal-branding/": {
-  "hash": "0e492b7763c253b4ea2a0baf962dd16c258b8337",
+  "hash": "6e9a38f7cf52ec4454a5392ccd0f35ec4d7e7d46",
+  "lastmod": "2026-10-16"
+ },
+ "/locations/srikalahasti/": {
+  "hash": "366af6d9674441bbf494562af298f09bba9bd105",
+  "lastmod": "2026-10-16"
+ },
+ "/locations/chandragiri/": {
+  "hash": "0fc61015dcb826bfc841cc705b93698607588193",
+  "lastmod": "2026-10-16"
+ },
+ "/locations/madanapalle/": {
+  "hash": "7ef7b94a4451be91204f00a9f9aaf697040afe25",
+  "lastmod": "2026-10-16"
+ },
+ "/locations/nellore/": {
+  "hash": "1e964a2f71771a29b1c830e5ad63b24c9ea9e574",
   "lastmod": "2026-10-16"
  }
 }

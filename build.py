@@ -21,7 +21,7 @@ GEO = C.get("geo", {})
 LAT = GEO.get("latitude", GEO.get("lat", 13.6288))
 LNG = GEO.get("longitude", GEO.get("lng", 79.4192))
 GEO_REGION = C.get("geoRegion", "IN-AP")
-GEO_PLACENAME = C.get("city", "Tirupati")
+GEO_PLACENAME = C.get("geoPlacename", "Tirupati, South Andhra Pradesh")
 FONTS = all((R/"assets/fonts"/f).exists() for f in ("inter.woff2", "sora.woff2"))
 LEAD = C.get("leadEndpoint", ""); TSK = C.get("turnstileSiteKey", ""); HSTS = int(C.get("hstsMaxAge", 0)); UPD = C.get("legalUpdated", "2026-10-09"); AN = C["analytics"]
 def av(p): return p + "?v=" + hashlib.sha1((R/p.lstrip("/")).read_bytes()).hexdigest()[:8]
@@ -113,7 +113,7 @@ ORG = {"@context": "https://schema.org", "@type": "ProfessionalService", "@id": 
        "paymentAccepted": C.get("paymentAccepted", "Cash, UPI, Bank Transfer"),
        "currenciesAccepted": C.get("currenciesAccepted", "INR"),
        "inLanguage": C.get("inLanguage", ["en-IN", "te"]),
-       "areaServed": [{"@type": "City", "name": n} for n in ["Tirupati", "Renigunta", "Chittoor", "Chandragiri", "Nellore"]],
+       "areaServed": [{"@type": "City", "name": n} for n in ["Tirupati", "Srikalahasti", "Chittoor", "Renigunta", "Chandragiri", "Madanapalle", "Nellore", "Gudur", "Puttur"]] + [{"@type": "AdministrativeArea", "name": "South Andhra Pradesh"}, {"@type": "AdministrativeArea", "name": "Rayalaseema"}],
        "founder": {"@type": "Person", "name": C.get("founder", "Coach Sri"), **({"sameAs": [C["founderSocial"]]} if C.get("founderSocial") else {})},
        "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Digital marketing services", "itemListElement": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": z["name"], "url": U("/services/"+z["slug"]+"/")}} for z in S]},
        "contactPoint": {"@type": "ContactPoint", "contactType": "sales and enquiries", "telephone": C["phone"], "email": EMAIL}}
@@ -179,7 +179,7 @@ def footer():
     soc = "".join(f'<li><a href="{esc(s["url"])}" rel="me noopener" target="_blank">{esc(s["label"])}</a></li>' for s in C["socials"])
     return f'''<footer><div class="wrap fgrid"><div><b>Hei Digi</b><p>Your Digital Presence. Our Creative Strategy.</p><p>{C["city"]}, {C["region"]}, India</p></div>
 <nav aria-label="Services"><h2>Services</h2><ul>{sv}</ul></nav>
-<nav aria-label="Company"><h2>Explore</h2><ul><li><a href="/about/">About Hei Digi</a></li><li><a href="/#clients">Our Clients</a></li><li><a href="/industries/">Industries</a></li><li><a href="/blog/">Marketing Guides</a></li><li><a href="/#process">Process</a></li><li><a href="/contact/">Contact</a></li></ul></nav>
+<nav aria-label="Company"><h2>Explore</h2><ul><li><a href="/about/">About Hei Digi</a></li><li><a href="/#clients">Our Clients</a></li><li><a href="/industries/">Industries</a></li><li><a href="/locations/">Service Areas</a></li><li><a href="/blog/">Marketing Guides</a></li><li><a href="/#process">Process</a></li><li><a href="/contact/">Contact</a></li></ul></nav>
 <div><h2>Contact</h2><ul><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="tel:{PHONE}">{C["phoneDisplay"]}</a></li><li><a href="https://wa.me/{PHONE.lstrip("+")}" target="_blank" rel="noopener" data-cta="footer_whatsapp">WhatsApp</a></li>{f'<li><a href="{MAPS_URL}" target="_blank" rel="noopener">Get directions</a></li>' if MAPS_URL else ''}{soc}</ul><p class="footer-address">{esc(ADDRESS.get("streetAddress", ""))}, {esc(ADDRESS.get("addressLocality", C["city"]))}, {esc(ADDRESS.get("addressRegion", C["region"]))} {esc(ADDRESS.get("postalCode", ""))}</p></div></div>
 <div class="wrap copy">© <span id="yr">{datetime.date.today().year}</span> Hei Digi, {C["city"]}. · <a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Service</a> · <a href="/cookie-policy/">Cookie Policy</a> · <a href="/disclaimer/">Disclaimer</a><span id="consent-slot"></span></div></footer>
 <a class="wa-float" href="https://wa.me/{PHONE.lstrip("+")}?text={urllib.parse.quote('Hi Hei Digi, I would like to discuss digital marketing for my business.') }" target="_blank" rel="noopener" aria-label="Chat with Hei Digi on WhatsApp" data-cta="floating_whatsapp"><svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 2.3A13.6 13.6 0 0 0 4.4 23l-1.8 6.5 6.7-1.8A13.7 13.7 0 1 0 16 2.3zm0 24.8c-2.1 0-4.1-.6-5.9-1.7l-.4-.2-3.9 1.1 1.1-3.8-.3-.4A11.2 11.2 0 1 1 16 27.1zm6.2-8.4c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a9.2 9.2 0 0 1-2.7-1.7 10.1 10.1 0 0 1-1.9-2.4c-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.1 1.4 3.3c.2.2 2.3 3.6 5.6 5 .8.3 1.4.5 1.9.6.8.3 1.6.2 2.2.1.7-.1 1.8-.7 2.1-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"/></svg><b>Chat on WhatsApp</b></a>
@@ -360,9 +360,9 @@ def home(P):
     opts = "".join(f'<option value="{s["slug"]}">{esc(s["name"])}</option>' for s in S)
     ind = ["Healthcare", "Education", "Construction", "Steel & Manufacturing", "Hospitality", "Professional Services", "Local Businesses", "Entrepreneurs", "Doctors & Professionals", "Personal Brands"]
     body = f'''{header(True)}<main id="main">
-<section id="home" class="hero"><div class="wrap hero-grid"><div><p class="pill">Top digital marketing, local SEO and social media services in Tirupati</p>
-<h1>Top Digital Marketing Agency in <span class="grad">Tirupati.</span></h1><p class="sub">Strategy. Creative. Local visibility. Measurable work.</p>
-<p class="lead">Hei Digi helps Tirupati businesses build a stronger online presence through search engine optimization (SEO), Google Business Profile management, social media, Meta Ads, creative design, video and personal branding. We focus on clear messaging, helpful content and honest reporting rather than ranking promises.</p>
+<section id="home" class="hero"><div class="wrap hero-grid"><div><p class="pill">Top Digital Marketing & Local SEO across Tirupati & South Andhra Pradesh</p>
+<h1>Top Digital Marketing Agency in <span class="grad">Tirupati.</span></h1><p class="sub">Strategy. Creative. Local visibility. Serving South Andhra Pradesh.</p>
+<p class="lead">Hei Digi helps businesses across Tirupati and South Andhra Pradesh—including Srikalahasti, Chittoor, Renigunta, Madanapalle and Nellore—build a dominant online presence through search engine optimization (SEO), Google Business Profile management, social media, Meta Ads, creative video and personal branding. We focus on clear messaging, helpful content and honest reporting rather than ranking promises.</p>
 <div class="btns"><a class="btn" href="/#contact" data-cta="hero_start_project">Discuss Your Project</a><a class="btn ghost" href="{wa_link("Hi Hei Digi, I would like to discuss digital marketing for my business.")}" target="_blank" rel="noopener noreferrer" data-cta="hero_whatsapp">WhatsApp Us</a><a class="btn ghost" href="/#clients" data-cta="hero_view_clients">Meet Our Clients</a></div><p class="meta">Working with {esc(D["stats"][0]["value"])} clients · {C["city"]}, {C["region"]}</p></div>
 <div class="stage" role="group" aria-label="Real Hei Digi campaign and personal-branding examples"><div class="hero-media-grid">
 <a class="hero-media-card coach-reel" href="https://www.instagram.com/coachshri_/" target="_blank" rel="noopener noreferrer" aria-label="View Coach Sri's Instagram profile"><img src="{av('/assets/work/hero-reel.webp')}" alt="Coach Sri speaking in a studio for a short-form video" width="548" height="975" fetchpriority="high"><span class="sc-label">Reels · Coach Sri</span></a>
@@ -443,7 +443,7 @@ def write_ai_discovery():
     blog_list = "\n".join(f"- [{b['title']}]({U('/blog/' + b['slug'] + '/')}): {b['desc']}" for b in BLOGS)
     llms = f"""# {C["name"]}
 
-> {C["name"]} is a premier digital marketing agency located in {C["city"]}, {C["region"]}, India. Founded and led by {C.get("founder", "Coach Sri")}, Hei Digi specializes in Local SEO, Google Business Profile management, Social Media Marketing (Instagram & Facebook), Meta Ads, Creative Design, Content Strategy, Performance Marketing, and Founder Personal Branding for businesses across Tirupati, Chittoor, Renigunta, and Andhra Pradesh.
+> {C["name"]} is a premier digital marketing agency located in {C["city"]}, {C["region"]}, India. Founded and led by {C.get("founder", "Coach Sri")}, Hei Digi specializes in Local SEO, Google Business Profile management, Social Media Marketing (Instagram & Facebook), Meta Ads, Creative Design, Content Strategy, Performance Marketing, and Founder Personal Branding for businesses across Tirupati, Srikalahasti, Chittoor, Renigunta, Chandragiri, Madanapalle, Nellore, and the South Andhra Pradesh region.
 
 ## Overview & Background
 
@@ -528,10 +528,18 @@ def write_ai_discovery():
             } for s in S
         ] + [
             {
+                "identifier": f"urn:ai:heidigi.com:location:{loc['slug']}",
+                "displayName": f"Digital Marketing in {loc['name']}",
+                "type": "text/html",
+                "description": loc['intro'],
+                "url": U(f"/locations/{loc['slug']}/")
+            } for loc in LOCATIONS
+        ] + [
+            {
                 "identifier": "urn:ai:heidigi.com:service:contact",
                 "displayName": "Contact & Business Consultation",
                 "type": "text/html",
-                "description": "Direct enquiry and digital marketing consultation for businesses in Tirupati and Andhra Pradesh.",
+                "description": "Direct enquiry and digital marketing consultation for businesses in Tirupati and South Andhra Pradesh.",
                 "url": U("/contact/")
             }
         ]
@@ -798,8 +806,8 @@ def extra_pages():
     # Location pages are individually written in extended_content.py, not duplicated city-name swaps.
     li = "/locations/"; locitems=[("Home","/"),("Service areas",None)]
     lc = "".join(f'<article class="card"><h2 class="h3"><a href="/locations/{esc(loc["slug"])}/">Digital marketing in {esc(loc["name"])}</a></h2><p>{esc(loc["intro"])}</p><a href="/locations/{esc(loc["slug"])}/">Read local information ↗</a></article>' for loc in LOCATIONS)
-    lbody = f'''{header()}<main id="main"><section class="phero"><div class="wrap narrow">{crumbs(locitems)}<h1>Service areas around Tirupati</h1><p class="lead">We discuss each area's real business context and customer needs. We do not suggest fake offices or make claims that Hei Digi has a staffed office in every town.</p></div></section><section class="sec"><div class="wrap"><div class="grid3">{lc}</div></div></section>{cta_block("local marketing in your service area")}</main>'''
-    pages[li] = (head("Digital Marketing Service Areas | Tirupati and Nearby", "Read local marketing information for Tirupati, Chittoor and Renigunta. Service availability depends on the project and confirmed business requirements.", li, og("locations", "Hei Digi service areas", "Andhra Pradesh"), [ORG, bc_ld(locitems), {"@context":"https://schema.org","@type":"CollectionPage","name":"Hei Digi service areas","url":U(li)}]) + "<body>" + lbody + footer(), True)
+    lbody = f'''{header()}<main id="main"><section class="phero"><div class="wrap narrow">{crumbs(locitems)}<h1>Digital Marketing Across South Andhra Pradesh</h1><p class="lead">Hei Digi serves businesses across the greater Tirupati region and key South Andhra Pradesh commercial corridors. We provide real local market strategies tailored to each area's unique business context.</p></div></section><section class="sec"><div class="wrap"><div class="grid3">{lc}</div></div></section>{cta_block("local marketing in your service area")}</main>'''
+    pages[li] = (head("Digital Marketing in Tirupati & South AP | Hei Digi", "Explore digital marketing services across Tirupati and South Andhra Pradesh, including Chittoor, Srikalahasti, Renigunta, Madanapalle and Nellore hubs.", li, og("locations", "Hei Digi service areas", "South Andhra Pradesh"), [ORG, bc_ld(locitems), {"@context":"https://schema.org","@type":"CollectionPage","name":"Hei Digi service areas","url":U(li)}]) + "<body>" + lbody + footer(), True)
     for loc in LOCATIONS:
         path="/locations/"+loc["slug"]+"/"; items=[("Home","/"),("Service areas","/locations/"),(loc["name"],None)]
         body=f'''{header()}<main id="main"><section class="phero"><div class="wrap narrow">{crumbs(items)}<h1>Digital marketing in {esc(loc["name"])}</h1><p class="lead">{esc(loc["intro"])}</p></div></section><article class="sec"><div class="wrap narrow prose">{sections_html(loc["sections"])}<p><a href="/services/seo/">SEO services</a> · <a href="/services/google-business-profile-management/">Google Business Profile</a> · <a href="/contact/">Contact Hei Digi</a></p></div></article>{cta_block("marketing support in "+loc["name"])}</main>'''
