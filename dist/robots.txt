@@ -1,13 +1,91 @@
-# Search crawlers (Googlebot, Bingbot and others) may crawl everything
+# ─── Hei Digi — robots.txt ───────────────────
+# Primary Domain: https://heidigi.com
+
 User-agent: *
 Allow: /
+Disallow: /api/
 
-# ChatGPT Search: keep allowed so the site can appear in ChatGPT search answers
+# ─── Search Engine Image Crawlers ────────────
+User-agent: Googlebot-Image
+Allow: /
+Allow: /assets/
+Allow: /favicon*
+Allow: /apple-touch-icon*
+Allow: /icon-*
+
+# ─── Major Search Engine Web Crawlers ────────
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+
+User-agent: Applebot
+Allow: /
+Disallow: /api/
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /api/
+
+User-agent: YandexBot
+Allow: /
+Disallow: /api/
+
+# ─── AI Search & Answer Engine Crawlers ──────
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /api/
 
-# GPTBot (model training) is a separate choice: set "gptbot" in site.config.json
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+
 User-agent: GPTBot
 Allow: /
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /api/
+
+# ─── Social Media Link Preview Crawlers ──────
+User-agent: Twitterbot
+Allow: /
+Disallow: /api/
+
+User-agent: facebookexternalhit
+Allow: /
+Disallow: /api/
+
+User-agent: LinkedInBot
+Allow: /
+Disallow: /api/
+
+User-agent: WhatsApp
+Allow: /
+Disallow: /api/
+
+User-agent: TelegramBot
+Allow: /
+Disallow: /api/
 
 Sitemap: https://heidigi.com/sitemap.xml

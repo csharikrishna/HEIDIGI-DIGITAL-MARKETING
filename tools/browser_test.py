@@ -1,9 +1,9 @@
 """Browser test (needs playwright + chromium): python3 tools/browser_test.py"""
-import json, sys
+import json, sys, tempfile
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent)); from _server import serve
 from pathlib import Path
 from playwright.sync_api import sync_playwright
-R = Path(__file__).resolve().parent.parent
+R = Path(__file__).resolve().parent.parent; TMP = Path(tempfile.gettempdir())
 srv = serve(8123)
 B = "http://127.0.0.1:8123"; res = []; 
 def ck(c, m): res.append((bool(c), m))
@@ -18,11 +18,11 @@ with sync_playwright() as p:
             ck(pg.evaluate("document.documentElement.scrollWidth <= innerWidth+1"), f"{name} {path}: no horizontal overflow")
         ck(not [e for e in errs if "fonts.g" not in e and "ERR_" not in e], f"{name}: console errors {errs}")
         ck(not bad, f"{name}: 4xx {bad}")
-        pg.goto(B + "/"); pg.screenshot(path=f"/tmp/{name}_home.png"); 
+        pg.goto(B + "/"); pg.screenshot(path=str(TMP / f"{name}_home.png")); 
         if name == "mobile":
             ck(pg.evaluate("document.getElementById('nav').hasAttribute('inert')"), "mobile: nav inert when closed")
             pg.click("#burger"); ck(pg.evaluate("document.getElementById('burger').getAttribute('aria-expanded')") == "true" and pg.evaluate("!document.getElementById('nav').hasAttribute('inert')"), "mobile: menu opens")
-            pg.screenshot(path="/tmp/mobile_menu.png"); pg.keyboard.press("Escape")
+            pg.screenshot(path=str(TMP / "mobile_menu.png")); pg.keyboard.press("Escape")
             ck(pg.evaluate("document.activeElement.id") == "burger" and pg.evaluate("!document.body.classList.contains('open')"), "mobile: Escape closes and returns focus")
             pg.click("#burger"); pg.click("#nav a[href='/#services']".replace("#services", "#about")); pg.wait_for_timeout(400)
             ck(pg.evaluate("!document.body.classList.contains('open')"), "mobile: link click closes menu")
@@ -46,7 +46,7 @@ with sync_playwright() as p:
         c2 = br.new_context(java_script_enabled=False, viewport=vp); p2 = c2.new_page(); p2.goto(B + "/")
         ck(p2.is_visible("text=Metro Steel >> nth=0") and p2.is_visible("#about h2") and p2.is_visible("#faq summary >> nth=0"), f"{name}: content visible with JS disabled")
         ck(p2.get_attribute("#lead", "method") == "post" and p2.is_disabled("#lead button[type=submit]"), f"{name}: no-JS form cannot submit personal data as a GET URL")
-        ck(p2.evaluate("document.documentElement.scrollWidth <= innerWidth+1"), f"{name}: no-JS no overflow"); p2.screenshot(path=f"/tmp/{name}_nojs.png"); c2.close()
+        ck(p2.evaluate("document.documentElement.scrollWidth <= innerWidth+1"), f"{name}: no-JS no overflow"); p2.screenshot(path=str(TMP / f"{name}_nojs.png")); c2.close()
         # reduced motion
         c3 = br.new_context(reduced_motion="reduce", viewport=vp); p3 = c3.new_page(); p3.goto(B + "/")
         ck(p3.evaluate("getComputedStyle(document.querySelector('.track')).animationName") == "none", f"{name}: marquee animation off in reduced motion"); c3.close()

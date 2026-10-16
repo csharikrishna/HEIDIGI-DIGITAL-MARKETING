@@ -4,7 +4,7 @@ from pathlib import Path
 R = Path(__file__).resolve().parent.parent
 def hdrs():
     out = []
-    for ln in (R/"_headers").read_text().split("\n/assets")[0].splitlines()[2:]:
+    for ln in (R/"_headers").read_text(encoding="utf-8").split("\n/assets")[0].splitlines()[2:]:
         k, v = [x.strip() for x in ln.split(":", 1)]
         if k == "Content-Security-Policy": v = v.replace("; upgrade-insecure-requests", "")  # local http would otherwise be upgraded
         out.append((k, v))

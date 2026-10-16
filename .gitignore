@@ -1,6 +1,7 @@
 __pycache__/
-reports/
+/reports/
 .lighthouseci/
 node_modules/
 .DS_Store
 .vercel/
+repo_report.pdf

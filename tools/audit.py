@@ -7,7 +7,7 @@ from urllib.parse import urlsplit, unquote
 from PIL import Image
 R = Path(__file__).resolve().parent.parent
 PUBLIC = R / "dist"
-C = json.loads((R / "site.config.json").read_text())
+C = json.loads((R / "site.config.json").read_text(encoding="utf-8"))
 DOM = C["domain"].rstrip("/")
 VOID = {"meta","link","img","input","br","hr","source","path","rect","stop","circle","area","embed","wbr"}
 fails=[]; passes=0
@@ -21,7 +21,7 @@ class Parser(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.stack=[]; self.ids=[]; self.headings=[]; self.imgs=[]; self.links=[]; self.resources=[]
-        self.canon=[]; self.ld=[]; self.title=""; self.desc=""; self.cur=None; self.buf=""; self.errors=[]; self.noindex=False; self.og={}; self.text=[]
+        self.canon=[]; self.ld=[]; self.title=""; self.desc=""; self.cur=None; self.buf=""; self.errors=[]; self.noindex=False; self.og={}; self.text=[]; self.geo={}
     def handle_starttag(self, tag, attrs):
         a=dict(attrs)
         if tag not in VOID: self.stack.append(tag)
@@ -38,6 +38,7 @@ class Parser(HTMLParser):
             if a.get("name")=="description": self.desc=a.get("content","")
             if a.get("name")=="robots": self.noindex="noindex" in a.get("content","")
             if (a.get("property") or "").startswith("og:"): self.og[a["property"]]=a.get("content","")
+            if a.get("name") in ("geo.region", "geo.placename", "geo.position", "ICBM"): self.geo[a["name"]]=a.get("content","")
         if tag=="script" and a.get("type")=="application/ld+json": self.cur="ld"; self.buf=""
         if tag=="title": self.cur="title"; self.buf=""
     def handle_endtag(self, tag):
@@ -74,7 +75,7 @@ def exists(url):
 
 ok(PUBLIC.exists(), "dist/ deploy output is missing; run python3 build.py")
 try:
-    vercel=json.loads((R/"vercel.json").read_text()); ok(vercel.get("outputDirectory")=="dist", "Vercel outputDirectory must be dist")
+    vercel=json.loads((R/"vercel.json").read_text(encoding="utf-8")); ok(vercel.get("outputDirectory")=="dist", "Vercel outputDirectory must be dist")
 except Exception as e:
     vercel={}; ok(False, f"vercel.json invalid: {e}")
 for secret_path in ("build.py","site.config.json","content/services.py","content/services.json","content/extended_content.py","content/legal.py","tools/audit.py","tools/run_all.py","DEPLOY.md","AUDIT-REPORT.md","DEEP-AUDIT-REPORT.md","reports/quality-report.md"):
@@ -115,6 +116,10 @@ for f in pages:
     if rel=="404.html":
         ok(p.noindex and not p.canon, "404 must be noindex and have no canonical")
         continue
+    ok(bool(p.geo.get("geo.region")), f"{rel}: missing geo.region")
+    ok(bool(p.geo.get("geo.placename")), f"{rel}: missing geo.placename")
+    ok(bool(p.geo.get("geo.position")), f"{rel}: missing geo.position")
+    ok(bool(p.geo.get("ICBM")), f"{rel}: missing ICBM")
     ok(p.title.startswith("") and 50<=len(p.title)<=60, f"{rel}: title length {len(p.title)} (must be 50-60)")
     ok(140<=len(p.desc)<=155, f"{rel}: description length {len(p.desc)} (must be 140-155)")
     ok(p.title not in titles, f"{rel}: duplicate title also in {titles.get(p.title)}")
@@ -144,12 +149,27 @@ for f in pages:
             if isinstance(node,dict) and node.get("@type")=="FAQPage":
                 qns=[x.get("name","") for x in node.get("mainEntity",[]) if isinstance(x,dict)]
                 ok(bool(qns) and all(q in text for q in qns), f"{rel}: FAQ schema does not match visible FAQs")
+            if isinstance(node, dict) and node.get("@type") == "ProfessionalService":
+                geo_node = node.get("geo", {})
+                ok(isinstance(geo_node, dict) and geo_node.get("@type") == "GeoCoordinates" and "latitude" in geo_node and "longitude" in geo_node, f"{rel}: ProfessionalService schema missing valid GeoCoordinates")
 
 ok(set(sm)==canonicals, f"sitemap/canonical mismatch ({len(set(sm)^canonicals)} differing URLs)")
 for url in sm: ok(exists(url), f"sitemap URL missing from dist: {url}")
 rb=(PUBLIC/"robots.txt").read_text(encoding="utf-8")
 ok("User-agent: *" in rb and "Allow: /" in rb and "Sitemap: "+DOM+"/sitemap.xml" in rb, "robots.txt missing allow rule or sitemap")
 ok((PUBLIC/".well-known/security.txt").exists(), "security.txt is missing")
+ok((PUBLIC/"llms.txt").exists(), "llms.txt is missing from dist")
+ok((PUBLIC/"llms-full.txt").exists(), "llms-full.txt is missing from dist")
+ok((PUBLIC/".well-known/ai-catalog.json").exists(), ".well-known/ai-catalog.json is missing from dist")
+ok((PUBLIC/"favicon.ico").exists(), "favicon.ico is missing from dist")
+ok((PUBLIC/"assets/favicon-32x32.png").exists(), "assets/favicon-32x32.png is missing from dist")
+ok((PUBLIC/"assets/favicon-16x16.png").exists(), "assets/favicon-16x16.png is missing from dist")
+ok((PUBLIC/"assets/favicon-48x48.png").exists(), "assets/favicon-48x48.png is missing from dist")
+ok((PUBLIC/"assets/favicon-96x96.png").exists(), "assets/favicon-96x96.png is missing from dist")
+llms_txt = (PUBLIC/"llms.txt").read_text(encoding="utf-8")
+ok(not re.search(r"\{[UC]", llms_txt), "llms.txt contains un-evaluated template syntax")
+llms_full = (PUBLIC/"llms-full.txt").read_text(encoding="utf-8")
+ok(not re.search(r"\{[UC]", llms_full), "llms-full.txt contains un-evaluated template syntax")
 # No inline scripts/styles: the generated site keeps a strict self-only CSP.
 # DOM updates must use textContent/createElement; user-entered form data is never interpolated into HTML strings.
 for js in sorted((R / "assets/js").glob("*.js")):

@@ -16,7 +16,7 @@ class L(HTMLParser):
             if k in a and a[k].startswith("/"): s.u.add(a[k].split("#")[0])
         if "srcset" in a: s.u.update(x.strip().split(" ")[0] for x in a["srcset"].split(","))
 seen, todo, bad = set(), ["/"], []
-sm = re.findall(r"<loc>https?://[^/]+(/[^<]*)</loc>", (R/"sitemap.xml").read_text()); todo += sm
+sm = re.findall(r"<loc>https?://[^/]+(/[^<]*)</loc>", (R/"sitemap.xml").read_text(encoding="utf-8")); todo += sm
 while todo:
     u = todo.pop()
     if u in seen or not u: continue

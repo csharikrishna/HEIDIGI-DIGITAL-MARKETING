@@ -16,7 +16,7 @@ with tempfile.TemporaryDirectory(prefix="heidigi-build-modes-") as td:
     shutil.copytree(ROOT, project, ignore=IGNORE)
     print("[modes] copied project", flush=True)
     cfg_path = project / "site.config.json"
-    cfg = json.loads(cfg_path.read_text())
+    cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
     # Ensure audit rules follow the configured host rather than a baked-in production domain.
     cfg["domain"] = "https://www.heidigi-audit.example"
     cfg["turnstileSiteKey"] = "test-public-site-key"
@@ -24,7 +24,7 @@ with tempfile.TemporaryDirectory(prefix="heidigi-build-modes-") as td:
     cfg["analytics"]["ga4"] = "G-TEST1234"
     cfg["analytics"]["plausibleDomain"] = "analytics.example.com"
     cfg["hstsMaxAge"] = 300
-    cfg_path.write_text(json.dumps(cfg, indent=1) + "\n")
+    cfg_path.write_text(json.dumps(cfg, indent=1) + "\n", encoding="utf-8")
     print("[modes] building alternate domain", flush=True)
     run = subprocess.run([sys.executable, "build.py"], cwd=project, capture_output=True, text=True, timeout=90)
     print("[modes] alternate build finished", flush=True)
@@ -37,9 +37,9 @@ with tempfile.TemporaryDirectory(prefix="heidigi-build-modes-") as td:
         fail("custom-domain static audit failed: " + (audit.stdout + audit.stderr)[-1200:])
 
     # Parse both host configurations and require the same CSP.
-    headers = (project / "_headers").read_text()
+    headers = (project / "_headers").read_text(encoding="utf-8")
     csp_line = next((x.split(":", 1)[1].strip() for x in headers.splitlines() if x.strip().startswith("Content-Security-Policy:")), None)
-    vercel = json.loads((project / "vercel.json").read_text())
+    vercel = json.loads((project / "vercel.json").read_text(encoding="utf-8"))
     vc_headers = vercel["headers"][0]["headers"]
     vc_csp = next((h["value"] for h in vc_headers if h["key"] == "Content-Security-Policy"), None)
     if not csp_line or csp_line != vc_csp:
@@ -55,7 +55,7 @@ with tempfile.TemporaryDirectory(prefix="heidigi-build-modes-") as td:
         fail("Plausible script origin missing from script-src")
     if not any(h.get("key") == "Strict-Transport-Security" and h.get("value") == "max-age=300" for h in vc_headers):
         fail("configured HSTS not present in Vercel headers")
-    html = (project / "index.html").read_text()
+    html = (project / "index.html").read_text(encoding="utf-8")
     if '<form id="lead" method="post" novalidate>' not in html or '<div id="ts"></div>' not in html:
         fail("configured lead form does not have POST fallback and Turnstile container")
     print("build modes: custom domain, Turnstile, GA4, Plausible, HSTS and form output passed")

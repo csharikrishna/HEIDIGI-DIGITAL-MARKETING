@@ -27,7 +27,7 @@ run("Static audit (tools/audit.py)", [sys.executable, "tools/audit.py"])
 run("Optional build modes and CSP (tools/test_build_modes.py)", [sys.executable, "tools/test_build_modes.py"])
 run("Form logic (tools/test_lead.js)", ["node", "tools/test_lead.js"])
 run("Enquiry API (tools/test_api.js)", ["node", "tools/test_api.js"])
-run("JavaScript syntax", ["bash", "-c", "for f in assets/js/*.js api/*.js; do node --check $f || exit 1; done"])
+run("JavaScript syntax", [sys.executable, "-c", "import sys, subprocess, glob; errs = []; [errs.append(f'{f}: {p.stderr.strip()}\\n') for f in sorted(glob.glob('assets/js/*.js') + glob.glob('api/*.js')) for p in [subprocess.run(['node', '--check', f], capture_output=True, text=True)] if p.returncode != 0]; (sys.stderr.write(''.join(errs)) if errs else None); sys.exit(1 if errs else 0)"])
 run("Internal link crawl (tools/crawl_links.py)", [sys.executable, "tools/crawl_links.py"])
 try:
     browser_probe = subprocess.run([sys.executable, "-c", "from playwright.sync_api import sync_playwright as s;p=s().start();p.chromium.launch().close();p.stop()"], capture_output=True, timeout=8)
@@ -39,7 +39,7 @@ if have_pw:
     run("Browser tests: CSP, consent, enquiry endpoint, keyboard (tools/browser_features.py)", [sys.executable, "tools/browser_features.py"])
     run("Local performance probe (informational, not Lighthouse)", [sys.executable, "tools/perf_probe.py"], critical=False)
 else: steps.append(("Browser tests", False, "SKIP", 0, "Playwright browser could not launch in this environment. Browser interaction assertions were not run here. GitHub Actions installs Chromium and executes these same tests."))
-cfg = json.loads((R/"site.config.json").read_text()); lim = []
+cfg = json.loads((R/"site.config.json").read_text(encoding="utf-8")); lim = []
 if not shutil.which("lighthouse") and not shutil.which("lhci"): lim.append("Lighthouse is not installed in this environment, so no Lighthouse scores were produced here (CI job `lighthouse` runs it).")
 lim.append("Tests run against a local server, not the live domain: HTTPS, redirects, real response headers, HSTS and compression are untested until deployed.")
 if not (R/"assets/fonts/inter.woff2").exists(): lim.append("Bundled WOFF2 font files are not present. The current build uses the system-font fallback and does not request Google Fonts. To add branded Inter/Sora fonts, run `python3 tools/fetch_fonts.py` once on a machine with internet access, then rebuild.")
@@ -53,5 +53,5 @@ md = ["# Quality report", "", f"Result: **{status}** ({passed} passed, {failed} 
 md += [f"| {n} | {'yes' if c else 'no'} | {st} | {t} |" for n, c, st, t, _ in steps]
 md += ["", "## Details (last lines of each step)"] + [f"**{n}**\n```\n{tail}\n```" for n, _, _, _, tail in steps]
 md += ["", "## Environment limitations", ""] + [f"- {x}" for x in lim]
-(R/"reports/quality-report.md").write_text("\n".join(md) + "\n"); print("\n".join(md[:4 + len(steps) + 2])); print("\nLimitations:"); [print(" -", x) for x in lim]
+(R/"reports/quality-report.md").write_text("\n".join(md) + "\n", encoding="utf-8"); print("\n".join(md[:4 + len(steps) + 2])); print("\nLimitations:"); [print(" -", x) for x in lim]
 sys.exit(1 if crit else 0)

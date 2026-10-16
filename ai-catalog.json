@@ -1,0 +1,81 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Hei Digi",
+    "identifier": "did:web:heidigi.com",
+    "documentationUrl": "https://heidigi.com/llms.txt",
+    "logoUrl": "https://heidigi.com/assets/icon-512.png"
+  },
+  "entries": [
+    {
+      "identifier": "urn:ai:heidigi.com:service:seo",
+      "displayName": "Search Engine Optimization (SEO)",
+      "type": "text/html",
+      "description": "Technical, on-page and local SEO built around how customers search.",
+      "url": "https://heidigi.com/services/seo/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:service:social-media-marketing",
+      "displayName": "Social Media Marketing",
+      "type": "text/html",
+      "description": "A consistent Instagram and Facebook presence for local brands.",
+      "url": "https://heidigi.com/services/social-media-marketing/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:service:google-business-profile-management",
+      "displayName": "Google Business Profile Management",
+      "type": "text/html",
+      "description": "Accurate, active profiles that help local customers find you.",
+      "url": "https://heidigi.com/services/google-business-profile-management/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:service:meta-ads",
+      "displayName": "Meta Ads",
+      "type": "text/html",
+      "description": "Facebook and Instagram campaigns for leads and WhatsApp enquiries.",
+      "url": "https://heidigi.com/services/meta-ads/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:service:creative-design",
+      "displayName": "Creative Design",
+      "type": "text/html",
+      "description": "Posts, posters, carousels and banners in one consistent look.",
+      "url": "https://heidigi.com/services/creative-design/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:service:video-editing-ai-videos",
+      "displayName": "Video Editing & AI Videos",
+      "type": "text/html",
+      "description": "Reels, promo videos and AI-assisted production.",
+      "url": "https://heidigi.com/services/video-editing-ai-videos/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:service:branding",
+      "displayName": "Branding",
+      "type": "text/html",
+      "description": "A clear visual identity and consistent positioning.",
+      "url": "https://heidigi.com/services/branding/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:service:personal-branding",
+      "displayName": "Personal Branding",
+      "type": "text/html",
+      "description": "Content and positioning for doctors, founders and professionals.",
+      "url": "https://heidigi.com/services/personal-branding/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:service:content-strategy",
+      "displayName": "Content Strategy",
+      "type": "text/html",
+      "description": "Content pillars, calendars and campaign ideas tied to your goals.",
+      "url": "https://heidigi.com/services/content-strategy/"
+    },
+    {
+      "identifier": "urn:ai:heidigi.com:service:contact",
+      "displayName": "Contact & Business Consultation",
+      "type": "text/html",
+      "description": "Direct enquiry and digital marketing consultation for businesses in Tirupati and Andhra Pradesh.",
+      "url": "https://heidigi.com/contact/"
+    }
+  ]
+}

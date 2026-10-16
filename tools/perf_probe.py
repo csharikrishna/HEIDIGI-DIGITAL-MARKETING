@@ -17,4 +17,4 @@ with sync_playwright() as p:
             pg.goto("http://127.0.0.1:8134" + path, wait_until="load"); m = pg.evaluate(OBS); m.update(requests=n[0], kb_uncompressed=round(size[0]/1024, 1))
             out[f"{name} {path}"] = m; ctx.close()
     br.close()
-(R/"reports").mkdir(exist_ok=True); (R/"reports/perf-local.json").write_text(json.dumps(out, indent=1)); print(json.dumps(out, indent=1))
+(R/"reports").mkdir(exist_ok=True); (R/"reports/perf-local.json").write_text(json.dumps(out, indent=1), encoding="utf-8"); print(json.dumps(out, indent=1))

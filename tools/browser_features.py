@@ -1,12 +1,13 @@
 """Browser tests for consent, enquiry endpoint states, CSP, keyboard and external requests. python3 tools/browser_features.py"""
-import json, sys, re
+import json, sys, re, tempfile
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent)); from _server import serve, R
 from playwright.sync_api import sync_playwright
+TMP = Path(tempfile.gettempdir())
 serve(8131, csp=True); serve(8132, csp=False)
 res = []
 def ck(c, m): res.append((bool(c), m))
-CFG = json.loads(re.search(r"=(\{.*\});", (R/"assets/js/config.js").read_text()).group(1))
+CFG = json.loads(re.search(r"=(\{.*\});", (R/"assets/js/config.js").read_text(encoding="utf-8")).group(1))
 def with_cfg(ctx, **kw):
     c = dict(CFG, **kw); ctx.route("**/assets/js/config.js*", lambda r: r.fulfill(body="window.HEIDIGI_CONFIG=" + json.dumps(c) + ";", content_type="application/javascript"))
 def fill_valid(pg):
@@ -32,7 +33,7 @@ with sync_playwright() as p:
         ck(pg.evaluate("document.querySelector('header .bar').getBoundingClientRect().height") >= 60, f"{nm}: header bar is full height")
         if not mob: ck(pg.evaluate("(()=>{const t=[...document.querySelectorAll('#nav a')].map(a=>Math.round(a.getBoundingClientRect().top));return new Set(t).size===1})()"), "desktop: nav links sit on one row")
         else: ck(pg.is_visible("#burger") and pg.evaluate("document.getElementById('burger').getBoundingClientRect().top<70"), "mobile: burger inside the header")
-        pg.screenshot(path=f"/tmp/hdr_{nm}.png", clip={"x": 0, "y": 0, "width": vp["width"], "height": 90}); ctx.close()
+        pg.screenshot(path=str(TMP / f"hdr_{nm}.png"), clip={"x": 0, "y": 0, "width": vp["width"], "height": 90}); ctx.close()
     # 2. consent flow (GA4 configured, requests aborted)
     ctx = br.new_context(); with_cfg(ctx, ga4="G-TEST1234"); gtm = []
     ctx.route(re.compile(r"googletagmanager\.com"), lambda r: (gtm.append(r.request.url), r.abort()))

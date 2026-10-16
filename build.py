@@ -8,8 +8,8 @@ from services import S, HOME_FAQ
 from legal import privacy, terms
 from extended_content import SERVICE_DETAILS, INDUSTRIES, LOCATIONS, BLOGS
 R = Path(__file__).parent
-C = json.loads((R/"site.config.json").read_text())
-raw = (R/"assets/js/data.js").read_text()
+C = json.loads((R/"site.config.json").read_text(encoding="utf-8"))
+raw = (R/"assets/js/data.js").read_text(encoding="utf-8")
 D = json.loads(raw[raw.index("{", raw.index("window.HEIDIGI_DATA")): raw.rindex("}")+1])
 esc = lambda s: html.escape(str(s), quote=True)
 DOM = C["domain"].rstrip("/")
@@ -17,6 +17,11 @@ U = lambda p: DOM + p
 EMAIL, PHONE = C["email"], C["phone"]
 ADDRESS = C.get("address", {})
 MAPS_URL = C.get("mapsUrl", "")
+GEO = C.get("geo", {})
+LAT = GEO.get("latitude", GEO.get("lat", 13.6288))
+LNG = GEO.get("longitude", GEO.get("lng", 79.4192))
+GEO_REGION = C.get("geoRegion", "IN-AP")
+GEO_PLACENAME = C.get("city", "Tirupati")
 FONTS = all((R/"assets/fonts"/f).exists() for f in ("inter.woff2", "sora.woff2"))
 LEAD = C.get("leadEndpoint", ""); TSK = C.get("turnstileSiteKey", ""); HSTS = int(C.get("hstsMaxAge", 0)); UPD = C.get("legalUpdated", "2026-10-09"); AN = C["analytics"]
 def av(p): return p + "?v=" + hashlib.sha1((R/p.lstrip("/")).read_bytes()).hexdigest()[:8]
@@ -55,6 +60,7 @@ def grad(w, h):
     return im
 def og(name, title, sub):
     out = R/f"assets/og/{name}.jpg"; out.parent.mkdir(parents=True, exist_ok=True)
+    if out.exists(): return f"/assets/og/{name}.jpg"
     im = grad(1200, 630); d = ImageDraw.Draw(im)
     d.ellipse((780, -160, 1380, 440), fill=(79, 70, 229)); im = Image.blend(grad(1200, 630), im, .45); d = ImageDraw.Draw(im)
     d.text((70, 70), "Hei Digi", font=font(40), fill="white")
@@ -65,12 +71,30 @@ def og(name, title, sub):
     im.save(out, "JPEG", quality=82, optimize=True, progressive=True)
     return f"/assets/og/{name}.jpg"
 def icons():
-    for sz, n in ((180, "apple-touch-icon"), (192, "icon-192"), (512, "icon-512")):
-        im = grad(sz, sz); d = ImageDraw.Draw(im)
-        for i, t in enumerate(("Hei", "Digi")):
-            f = font(int(sz*.28)); w = d.textlength(t, font=f)
-            d.text(((sz-w)/2, sz*(.2+.33*i)), t, font=f, fill="white")
-        im.save(R/f"assets/{n}.png", optimize=True)
+    for sz, n in ((180, "apple-touch-icon"), (192, "icon-192"), (512, "icon-512"),
+                  (16, "favicon-16x16"), (32, "favicon-32x32"), (48, "favicon-48x48"), (96, "favicon-96x96")):
+        out_f = R/f"assets/{n}.png"
+        if not out_f.exists():
+            im = grad(sz, sz); d = ImageDraw.Draw(im)
+            if sz >= 48:
+                for i, t in enumerate(("Hei", "Digi")):
+                    f = font(int(sz*.28)); w = d.textlength(t, font=f)
+                    d.text(((sz-w)/2, sz*(.2+.33*i)), t, font=f, fill="white")
+            elif sz >= 32:
+                f = font(int(sz*.38)); w = d.textlength("HD", font=f)
+                d.text(((sz-w)/2, sz*.22), "HD", font=f, fill="white")
+            else:
+                f = font(10); w = d.textlength("H", font=f)
+                d.text(((sz-w)/2, 2), "H", font=f, fill="white")
+            im.save(out_f, optimize=True)
+    ico_f = R/"assets/favicon.ico"
+    if not ico_f.exists():
+        ico_im = grad(48, 48); d = ImageDraw.Draw(ico_im)
+        f = font(int(48*.28)); w = d.textlength("HD", font=f)
+        d.text(((48-w)/2, 48*.22), "HD", font=f, fill="white")
+        ico_im.save(ico_f, format="ICO", sizes=[(16, 16), (32, 32), (48, 48)])
+    if not (R/"favicon.ico").exists() and ico_f.exists():
+        shutil.copy2(ico_f, R/"favicon.ico")
 
 # ---------- shared layout ----------
 def jl(o): return '<script type="application/ld+json">' + json.dumps(o, ensure_ascii=False, separators=(",", ":")) + "</script>"
@@ -83,6 +107,12 @@ ORG = {"@context": "https://schema.org", "@type": "ProfessionalService", "@id": 
                    "addressRegion": ADDRESS.get("addressRegion", C["region"]),
                    "postalCode": ADDRESS.get("postalCode", ""),
                    "addressCountry": ADDRESS.get("addressCountry", C["country"])},
+       "geo": {"@type": "GeoCoordinates", "latitude": LAT, "longitude": LNG},
+       "openingHoursSpecification": C.get("openingHoursSpecification", [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "09:30", "closes": "18:30"}]),
+       "priceRange": C.get("priceRange", "₹₹"),
+       "paymentAccepted": C.get("paymentAccepted", "Cash, UPI, Bank Transfer"),
+       "currenciesAccepted": C.get("currenciesAccepted", "INR"),
+       "inLanguage": C.get("inLanguage", ["en-IN", "te"]),
        "areaServed": [{"@type": "City", "name": n} for n in ["Tirupati", "Renigunta", "Chittoor", "Chandragiri", "Nellore"]],
        "founder": {"@type": "Person", "name": C.get("founder", "Coach Sri"), **({"sameAs": [C["founderSocial"]]} if C.get("founderSocial") else {})},
        "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Digital marketing services", "itemListElement": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": z["name"], "url": U("/services/"+z["slug"]+"/")}} for z in S]},
@@ -132,7 +162,8 @@ def head(title, desc, path, ogimg, ld=(), index=True):
     return f'''<!DOCTYPE html>
 <html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{t}</title><meta name="description" content="{d}">{robots}<meta name="theme-color" content="#0b0a2e">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest">
+<meta name="geo.region" content="{esc(GEO_REGION)}"><meta name="geo.placename" content="{esc(GEO_PLACENAME)}"><meta name="geo.position" content="{LAT};{LNG}"><meta name="ICBM" content="{LAT}, {LNG}">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="/assets/favicon-32x32.png" type="image/png" sizes="32x32"><link rel="icon" href="/assets/favicon-16x16.png" type="image/png" sizes="16x16"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest">
 {og_}{fontlinks()}{f'<link rel="preload" as="image" href="{av('/assets/work/hero-reel.webp')}" fetchpriority="high">' if path == '/' else ''}<link rel="stylesheet" href="{av('/assets/css/style.css')}"><script src="{av('/assets/js/boot.js')}"></script>
 {"".join(jl(x) for x in ld)}</head>'''
 LOGO = '<img class="brand-mark" src="/assets/heidigi-logo.webp" width="40" height="40" alt="" aria-hidden="true" decoding="async">'
@@ -380,46 +411,160 @@ def source_files_for(path):
     if path == "/contact/" or path == "/about/": return ["build.py", "site.config.json"]
     if path.startswith("/work/"): return ["build.py", "assets/js/data.js", "assets/work/hero-coach-sri-profile.webp"]
     return ["build.py"]
+GIT_DATES = {}
 def source_lastmod(path, fallback):
     # Prefer the true per-source Git commit date. A downloaded ZIP has no commit history,
     # so fall back to the relevant source file mtime rather than assigning today's date to every URL.
     sources = [src for src in source_files_for(path) if src != "build.py"]
-    dates=[]
+    dates = []
     # Avoid repeated slow Git calls when a ZIP has no .git directory (e.g. Vercel preview or a local extracted archive).
     if (R/".git").exists():
         for src in sources:
-            try:
-                out=subprocess.run(["git","log","-1","--format=%cs","--",src],cwd=R,text=True,capture_output=True,timeout=3)
-                d=out.stdout.strip()
-                if out.returncode == 0 and re.fullmatch(r"\d{4}-\d{2}-\d{2}",d): dates.append(d)
-            except (OSError, subprocess.TimeoutExpired): pass
+            if src not in GIT_DATES:
+                try:
+                    out = subprocess.run(["git", "log", "-1", "--format=%cs", "--", src], cwd=R, text=True, capture_output=True, timeout=3)
+                    d = out.stdout.strip()
+                    GIT_DATES[src] = d if (out.returncode == 0 and re.fullmatch(r"\d{4}-\d{2}-\d{2}", d)) else None
+                except (OSError, subprocess.TimeoutExpired):
+                    GIT_DATES[src] = None
+            if GIT_DATES[src]:
+                dates.append(GIT_DATES[src])
     if dates: return max(dates)
-    mtimes=[]
+    mtimes = []
     for src in sources:
-        f=R/src
+        f = R/src
         if f.is_file(): mtimes.append(datetime.date.fromtimestamp(f.stat().st_mtime).isoformat())
     return max(mtimes) if mtimes else fallback
 
+def write_ai_discovery():
+    srv_list = "\n".join(f"- [{s['name']}]({U('/services/' + s['slug'] + '/')}): {s['short']}" for s in S)
+    ind_list = "\n".join(f"- [{ind['name']}]({U('/industries/' + ind['slug'] + '/')}): {ind['intro']}" for ind in INDUSTRIES)
+    loc_list = "\n".join(f"- [{loc['name']}]({U('/locations/' + loc['slug'] + '/')}): {loc['intro']}" for loc in LOCATIONS)
+    blog_list = "\n".join(f"- [{b['title']}]({U('/blog/' + b['slug'] + '/')}): {b['desc']}" for b in BLOGS)
+    llms = f"""# {C["name"]}
+
+> {C["name"]} is a premier digital marketing agency located in {C["city"]}, {C["region"]}, India. Founded and led by {C.get("founder", "Coach Sri")}, Hei Digi specializes in Local SEO, Google Business Profile management, Social Media Marketing (Instagram & Facebook), Meta Ads, Creative Design, Content Strategy, Performance Marketing, and Founder Personal Branding for businesses across Tirupati, Chittoor, Renigunta, and Andhra Pradesh.
+
+## Overview & Background
+
+- [About Hei Digi]({U('/about/')}): Agency philosophy, go-to-market strategy, founder {C.get("founder", "Coach Sri")}, and marketing built around customer problems rather than channel tactics.
+- [Contact Hei Digi]({U('/contact/')}): Verified office address ({ADDRESS.get("streetAddress", "")}, {ADDRESS.get("addressLocality", C["city"])}, {ADDRESS.get("addressRegion", C["region"])} {ADDRESS.get("postalCode", "")}), phone ({C["phoneDisplay"]}), email ({EMAIL}), WhatsApp and Google Maps directions.
+
+## Core Services
+
+{srv_list}
+
+## Industries Served
+
+{ind_list}
+
+## Service Locations
+
+{loc_list}
+
+## Client Case Studies
+
+- [Coach Sri Personal Branding]({U('/work/coach-sri-personal-branding/')}): Transparent summary of a 3-month personal branding engagement on Instagram.
+- [BNI Networking Conclave]({U('/work/bni-networking-conclave-leads/')}): Campaign creative design and lead generation for business networking event.
+
+## Practical Marketing Guides
+
+- [Marketing Guides Hub]({U('/blog/')}): Plain-language guides on local SEO, Google Business Profile, Meta Ads, and reporting.
+{blog_list}
+
+## Legal & Compliance Policies
+
+- [Privacy Policy]({U('/privacy/')}): Data protection standards under India's Digital Personal Data Protection Act (DPDPA 2023).
+- [Terms & Conditions]({U('/terms/')}): Website terms of use and client engagement agreements.
+- [Cookie Policy]({U('/cookie-policy/')}): Storage and consent guidelines.
+- [Marketing Disclaimer]({U('/disclaimer/')}): Disclaimers regarding platform results, ad spend separation, and ranking guarantees.
+"""
+    (R/"llms.txt").write_text(llms, encoding="utf-8")
+
+    full_blocks = [f"# {C['name']} — Comprehensive Digital Marketing Knowledge Base\n\n> Complete authoritative reference for {C['name']}, Tirupati, Andhra Pradesh, India.\n"]
+    full_blocks.append("## Business Identity & Contact Information\n")
+    full_blocks.append(f"- **Agency Name:** {C['name']}\n- **Founder:** {C.get('founder', 'Coach Sri')}\n- **Address:** {ADDRESS.get('streetAddress', '')}, {ADDRESS.get('addressLocality', C['city'])}, {ADDRESS.get('addressRegion', C['region'])} {ADDRESS.get('postalCode', '')}\n- **Phone:** {C['phoneDisplay']} ({C['phone']})\n- **Email:** {EMAIL}\n- **Website:** {DOM}\n- **Maps Link:** {MAPS_URL}\n")
+    
+    full_blocks.append("## Detailed Service Specifications\n")
+    for s in S:
+        full_blocks.append(f"### {s['name']}\n**URL:** {U('/services/' + s['slug'] + '/')}\n\n{s['intro']}\n\n**Included Deliverables:**\n" + "\n".join(f"- {x}" for x in s['inc']) + f"\n\n**Who this is for:** {s['who']}\n\n**Important Note:** {s['note']}\n")
+    
+    full_blocks.append("## Industry Approaches\n")
+    for ind in INDUSTRIES:
+        full_blocks.append(f"### {ind['name']}\n**URL:** {U('/industries/' + ind['slug'] + '/')}\n\n{ind['intro']}\n\n**Industry Needs:** {ind['needs']}\n")
+    
+    full_blocks.append("## Geographic Coverage\n")
+    for loc in LOCATIONS:
+        full_blocks.append(f"### {loc['name']}\n**URL:** {U('/locations/' + loc['slug'] + '/')}\n\n{loc['intro']}\n")
+
+    full_blocks.append("## Client Case Studies\n")
+    full_blocks.append(f"### Coach Sri Personal Branding\n**URL:** {U('/work/coach-sri-personal-branding/')}\n\nTransparent summary of a three-month personal branding engagement on Instagram for Coach Sri, establishing consistent short-form Reel production, thought-leadership positioning, and profile optimization.\n")
+    full_blocks.append(f"### BNI Networking Conclave Lead Generation\n**URL:** {U('/work/bni-networking-conclave-leads/')}\n\nCampaign creative design and lead generation summary for business networking event conclave in Andhra Pradesh.\n")
+
+    full_blocks.append("## Practical Marketing Guides\n")
+    for b in BLOGS:
+        full_blocks.append(f"### {b['title']}\n**URL:** {U('/blog/' + b['slug'] + '/')}\n\n{b['desc']}\n")
+
+    full_blocks.append("## Legal & Regulatory Compliance\n")
+    full_blocks.append(f"- **Privacy Policy ({U('/privacy/')}):** Privacy framework compliant with India's Digital Personal Data Protection Act (DPDPA 2023).\n- **Terms of Service ({U('/terms/')}):** Professional service agreement, scope limitations, and transparent billing.\n- **Cookie Policy ({U('/cookie-policy/')}):** Zero third-party trackers before explicit consent.\n- **Marketing Disclaimer ({U('/disclaimer/')}):** Explicit disclaimer separating agency fees from advertising spend; no synthetic ranking or follower guarantees.\n")
+    
+    (R/"llms-full.txt").write_text("\n".join(full_blocks) + "\n", encoding="utf-8")
+
+    ai_cat = {
+        "specVersion": "1.0",
+        "host": {
+            "displayName": C["name"],
+            "identifier": "did:web:" + DOM.split("//")[1],
+            "documentationUrl": U("/llms.txt"),
+            "logoUrl": U("/assets/icon-512.png")
+        },
+        "entries": [
+            {
+                "identifier": f"urn:ai:heidigi.com:service:{s['slug']}",
+                "displayName": s["name"],
+                "type": "text/html",
+                "description": s["short"],
+                "url": U(f"/services/{s['slug']}/")
+            } for s in S
+        ] + [
+            {
+                "identifier": "urn:ai:heidigi.com:service:contact",
+                "displayName": "Contact & Business Consultation",
+                "type": "text/html",
+                "description": "Direct enquiry and digital marketing consultation for businesses in Tirupati and Andhra Pradesh.",
+                "url": U("/contact/")
+            }
+        ]
+    }
+    cat_json = json.dumps(ai_cat, indent=2) + "\n"
+    (R/"ai-catalog.json").write_text(cat_json, encoding="utf-8")
+    well_known = R/".well-known"; well_known.mkdir(parents=True, exist_ok=True)
+    (well_known/"ai-catalog.json").write_text(cat_json, encoding="utf-8")
+
 def copy_public_output():
-    dist=R/"dist"
+    dist = R/"dist"
     if dist.exists(): shutil.rmtree(dist)
     dist.mkdir(parents=True)
     # Only built public pages are copied: Python, source JSON, tests, reports and config stay out.
     for path, (markup, indexable) in pages.items():
         rel = Path("404.html") if path == "/404.html" else (Path("index.html") if path == "/" else Path(path.strip("/"))/"index.html")
-        target=dist/rel; target.parent.mkdir(parents=True,exist_ok=True); target.write_text(markup)
+        target = dist/rel; target.parent.mkdir(parents=True, exist_ok=True); target.write_text(markup, encoding="utf-8")
     shutil.copytree(R/"assets", dist/"assets", dirs_exist_ok=True)
-    for name in ("sitemap.xml","robots.txt","manifest.webmanifest"):
-        shutil.copy2(R/name,dist/name)
-    sec=dist/".well-known"/"security.txt"; sec.parent.mkdir(parents=True,exist_ok=True)
-    expires=(datetime.date.today()+datetime.timedelta(days=365)).isoformat()
-    sec.write_text(f"Contact: mailto:{EMAIL}\nPreferred-Languages: en, te\nExpires: {expires}T00:00:00Z\nCanonical: {U('/.well-known/security.txt')}\n")
+    for name in ("sitemap.xml", "robots.txt", "manifest.webmanifest", "favicon.ico", "llms.txt", "llms-full.txt", "ai-catalog.json"):
+        if (R/name).exists():
+            shutil.copy2(R/name, dist/name)
+    sec = dist/".well-known"/"security.txt"; sec.parent.mkdir(parents=True, exist_ok=True)
+    expires = (datetime.date.today() + datetime.timedelta(days=365)).isoformat()
+    sec.write_text(f"Contact: mailto:{EMAIL}\nPreferred-Languages: en, te\nExpires: {expires}T00:00:00Z\nCanonical: {U('/.well-known/security.txt')}\n", encoding="utf-8")
+    if (R/".well-known"/"ai-catalog.json").exists():
+        aic = dist/".well-known"/"ai-catalog.json"; aic.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(R/".well-known"/"ai-catalog.json", aic)
     # Do not copy source reports, build scripts, JSON config, API helper files or content databases into dist.
     return dist
 
 # ---------- write ----------
 def write():
-    state_f = R/".build-state.json"; state = json.loads(state_f.read_text()) if state_f.exists() else {}
+    state_f = R/".build-state.json"; state = json.loads(state_f.read_text(encoding="utf-8")) if state_f.exists() else {}
     # Remove only stale pages previously generated by this builder, plus their build-state entries.
     for stale in set(state) - set(pages):
         target = R/"404.html" if stale == "/404.html" else R/stale.strip("/")/"index.html" if stale != "/" else R/"index.html"
@@ -434,33 +579,134 @@ def write():
     today = datetime.date.today().isoformat(); urls = []
     for path, (h, idx) in pages.items():
         f = R/"404.html" if path == "/404.html" else R/path.strip("/")/"index.html" if path != "/" else R/"index.html"
-        f.parent.mkdir(parents=True, exist_ok=True); f.write_text(h)
+        f.parent.mkdir(parents=True, exist_ok=True); f.write_text(h, encoding="utf-8")
         if idx:
-            hh = hashlib.sha1(h.encode()).hexdigest()
+            hh = hashlib.sha1(h.encode("utf-8")).hexdigest()
             changed = state.get(path, {}).get("hash") != hh
             prior = state.get(path, {}).get("lastmod", today)
             page_date = source_lastmod(path, today) if changed or not state.get(path) else prior
             state[path] = {"hash": hh, "lastmod": page_date}
             urls.append((path, page_date))
-    state_f.write_text(json.dumps(state, indent=1))
-    (R/"sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{U(p)}</loc><lastmod>{m}</lastmod></url>\n" for p, m in urls) + "</urlset>\n")
+    state_f.write_text(json.dumps(state, indent=1), encoding="utf-8")
+    (R/"sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{U(p)}</loc><lastmod>{m}</lastmod></url>\n" for p, m in urls) + "</urlset>\n", encoding="utf-8")
     gpt = "Allow: /" if C["gptbot"] == "allow" else "Disallow: /"
-    (R/"robots.txt").write_text(f"# Search crawlers (Googlebot, Bingbot and others) may crawl everything\nUser-agent: *\nAllow: /\n\n# ChatGPT Search: keep allowed so the site can appear in ChatGPT search answers\nUser-agent: OAI-SearchBot\nAllow: /\n\n# GPTBot (model training) is a separate choice: set \"gptbot\" in site.config.json\nUser-agent: GPTBot\n{gpt}\n\nSitemap: {U('/sitemap.xml')}\n")
+    robots_content = f"""# ─── Hei Digi — robots.txt ───────────────────
+# Primary Domain: {DOM}
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# ─── Search Engine Image Crawlers ────────────
+User-agent: Googlebot-Image
+Allow: /
+Allow: /assets/
+Allow: /favicon*
+Allow: /apple-touch-icon*
+Allow: /icon-*
+
+# ─── Major Search Engine Web Crawlers ────────
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+
+User-agent: Applebot
+Allow: /
+Disallow: /api/
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /api/
+
+User-agent: YandexBot
+Allow: /
+Disallow: /api/
+
+# ─── AI Search & Answer Engine Crawlers ──────
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+
+User-agent: GPTBot
+{gpt}
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /api/
+
+# ─── Social Media Link Preview Crawlers ──────
+User-agent: Twitterbot
+Allow: /
+Disallow: /api/
+
+User-agent: facebookexternalhit
+Allow: /
+Disallow: /api/
+
+User-agent: LinkedInBot
+Allow: /
+Disallow: /api/
+
+User-agent: WhatsApp
+Allow: /
+Disallow: /api/
+
+User-agent: TelegramBot
+Allow: /
+Disallow: /api/
+
+Sitemap: {U('/sitemap.xml')}
+"""
+    (R/"robots.txt").write_text(robots_content, encoding="utf-8")
+    (R/"manifest.webmanifest").write_text(json.dumps({
+        "name": C["name"], "short_name": C["name"], "start_url": "/", "display": "standalone",
+        "background_color": "#0B1F4D", "theme_color": "#0B1F4D",
+        "icons": [
+            {"src": "/assets/favicon-48x48.png", "sizes": "48x48", "type": "image/png"},
+            {"src": "/assets/favicon-96x96.png", "sizes": "96x96", "type": "image/png"},
+            {"src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png"},
+            {"src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png"}
+        ]
+    }, indent=2) + "\n", encoding="utf-8")
+    sec = R/".well-known"/"security.txt"; sec.parent.mkdir(parents=True, exist_ok=True)
+    expires = (datetime.date.today() + datetime.timedelta(days=365)).isoformat()
+    sec.write_text(f"Contact: mailto:{EMAIL}\nPreferred-Languages: en, te\nExpires: {expires}T00:00:00Z\nCanonical: {U('/.well-known/security.txt')}\n", encoding="utf-8")
+    write_ai_discovery()
     write_headers()
-    (R/"manifest.webmanifest").write_text(json.dumps({"name": C["name"], "short_name": C["name"], "start_url": "/", "display": "standalone", "background_color": "#0B1F4D", "theme_color": "#0B1F4D",
-        "icons": [{"src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png"}]}))
-    sec=R/".well-known"/"security.txt"; sec.parent.mkdir(parents=True,exist_ok=True)
-    expires=(datetime.date.today()+datetime.timedelta(days=365)).isoformat()
-    sec.write_text(f"Contact: mailto:{EMAIL}\nPreferred-Languages: en, te\nExpires: {expires}T00:00:00Z\nCanonical: {U('/.well-known/security.txt')}\n")
     copy_public_output()
     return urls
 
 def write_config():
-    (R/"assets/js/config.js").write_text("window.HEIDIGI_CONFIG=" + json.dumps({"email": EMAIL, "phone": PHONE, "ga4": AN["ga4"], "plausible": AN["plausibleDomain"], "leadEndpoint": LEAD, "turnstileSiteKey": TSK, "services": {s["slug"]: s["name"] for s in S}}) + ";\n")
-    (R/"content/services.json").write_text(json.dumps({s["slug"]: s["name"] for s in S}, ensure_ascii=False, indent=2) + "\n")
+    (R/"assets/js/config.js").write_text("window.HEIDIGI_CONFIG=" + json.dumps({"email": EMAIL, "phone": PHONE, "ga4": AN["ga4"], "plausible": AN["plausibleDomain"], "leadEndpoint": LEAD, "turnstileSiteKey": TSK, "services": {s["slug"]: s["name"] for s in S}}) + ";\n", encoding="utf-8")
+    (R/"content/services.json").write_text(json.dumps({s["slug"]: s["name"] for s in S}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     try: (R/"api/services.json").unlink()
     except FileNotFoundError: pass
-    if FONTS: (R/"assets/css/fonts.css").write_text("@font-face{font-family:Inter;font-style:normal;font-weight:400 600;font-display:swap;src:url(/assets/fonts/inter.woff2) format('woff2')}@font-face{font-family:Sora;font-style:normal;font-weight:600 700;font-display:swap;src:url(/assets/fonts/sora.woff2) format('woff2')}")
+    if FONTS: (R/"assets/css/fonts.css").write_text("@font-face{font-family:Inter;font-style:normal;font-weight:400 600;font-display:swap;src:url(/assets/fonts/inter.woff2) format('woff2')}@font-face{font-family:Sora;font-style:normal;font-weight:600 700;font-display:swap;src:url(/assets/fonts/sora.woff2) format('woff2')}", encoding="utf-8")
     elif (R/"assets/css/fonts.css").exists(): (R/"assets/css/fonts.css").unlink()
 def headers():
     sc, cn, im, st, fo, fr = ["'self'"], ["'self'"], ["'self'", "data:"], ["'self'"], ["'self'"], []
@@ -477,11 +723,11 @@ def write_headers():
     IMM, WEEK = "public, max-age=31536000, immutable", "public, max-age=604800"
     h = headers(); host = DOM.split("//")[1]; alt = host[4:] if host.startswith("www.") else "www." + host
     cache = [("/assets/css/*", IMM), ("/assets/js/*", IMM), ("/assets/fonts/*", WEEK), ("/assets/og/*", WEEK), ("/assets/work/*", WEEK), ("/assets/clients/*", WEEK)]
-    (R/"_headers").write_text("# Generated headers for non-Vercel static hosts. Vercel uses vercel.json.\n/*\n" + "".join(f"  {k}: {v}\n" for k, v in h) + "".join(f"{p}\n  Cache-Control: {c}\n" for p, c in cache))
+    (R/"_headers").write_text("# Generated headers for non-Vercel static hosts. Vercel uses vercel.json.\n/*\n" + "".join(f"  {k}: {v}\n" for k, v in h) + "".join(f"{p}\n  Cache-Control: {c}\n" for p, c in cache), encoding="utf-8")
     vc = {"buildCommand": "python3 -m pip install -r requirements.txt && python3 build.py", "outputDirectory": "dist", "cleanUrls": False, "trailingSlash": True,
           "headers": [{"source": "/(.*)", "headers": [{"key": k, "value": v} for k, v in h]}] + [{"source": p.replace("/*", "/(.*)"), "headers": [{"key": "Cache-Control", "value": c}]} for p, c in cache],
           "redirects": [{"source": "/(.*)", "has": [{"type": "host", "value": alt}], "destination": DOM + "/$1", "permanent": True}]}
-    (R/"vercel.json").write_text(json.dumps(vc, indent=1) + "\n")
+    (R/"vercel.json").write_text(json.dumps(vc, indent=1) + "\n", encoding="utf-8")
 def legal_pages():
     x = dict(email=EMAIL, city=C["city"], region=C["region"], analytics=bool(AN["ga4"] or AN["plausibleDomain"]), ga4=bool(AN["ga4"]), plausible=bool(AN["plausibleDomain"]), api=bool(LEAD), turnstile=bool(TSK), fonts_self=FONTS)
     for slug, title, desc, h1, secs in (("privacy", "Privacy Policy | Hei Digi", "How Hei Digi handles your personal information, enquiries, analytics and cookies on this website.", "Privacy Policy", privacy(x)),
