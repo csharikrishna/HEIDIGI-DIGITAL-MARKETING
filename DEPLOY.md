@@ -94,13 +94,15 @@ The site has Privacy Policy, Terms, Cookie Policy and Disclaimer routes. Review 
 
 ## 9. Final QA and rollback
 
-- Build: `python3 build.py`.
-- Static source/output audit: `python3 tools/audit.py`.
-- Alternate domain/security config: `python3 tools/test_build_modes.py`.
-- Form/API tests: `node tools/test_lead.js && node tools/test_api.js`.
-- JavaScript syntax: `for f in assets/js/*.js api/*.js; do node --check "$f" || exit 1; done`.
-- Internal links: `python3 tools/crawl_links.py`.
-- Browser tests: `python3 tools/browser_test.py` and `python3 tools/browser_features.py` require Playwright plus Chromium. These could not run in this packaging environment; CI installs Chromium.
-- Lighthouse: `npx @lhci/cli autorun --config=lighthouserc.mobile.json` and the desktop config. Lighthouse is not installed/run in this environment, so no score is claimed.
+- Master test suite (recommended): `python tools/run_all.py` (executes the complete build, audit, build mode variations, API/lead tests, cross-platform JS syntax validation, and link crawler in one step).
+- Or run individual steps:
+  - Build: `python3 build.py`
+  - Static source/output audit: `python3 tools/audit.py`
+  - Alternate domain/security config: `python3 tools/test_build_modes.py`
+  - Form/API tests: `node tools/test_lead.js && node tools/test_api.js`
+  - JavaScript syntax: `python tools/run_all.py` (or `for f in assets/js/*.js api/*.js; do node --check "$f" || exit 1; done` in bash)
+  - Internal links: `python3 tools/crawl_links.py`
+- Browser tests: `python3 tools/browser_test.py` and `python3 tools/browser_features.py` require Playwright plus Chromium. These run automatically in GitHub Actions CI where Chromium is provisioned.
+- Lighthouse: `npx @lhci/cli autorun --config=lighthouserc.mobile.json` and the desktop config (runs automatically in GitHub Actions CI).
 
 For rollback, promote the previous good Vercel deployment. If a security header blocks a required resource, fix it in `build.py` and redeploy; do not disable the CSP as a shortcut.
