@@ -212,7 +212,8 @@ def prep_portfolio():
             for tw in (640, 1200):
                 if im.size[0] >= tw:
                     o = R / f"assets/work/optimized/{f.stem}-{tw}.webp"; o.parent.mkdir(parents=True, exist_ok=True)
-                    im.convert("RGB").resize((tw, round(im.size[1]*tw/im.size[0]))).save(o, "WEBP", quality=80)
+                    if not o.exists():
+                        im.convert("RGB").resize((tw, round(im.size[1]*tw/im.size[0]))).save(o, "WEBP", quality=80)
                     ss.append(f"/assets/work/optimized/{f.stem}-{tw}.webp {tw}w")
             it["srcset"] = ", ".join(ss)
         else:

@@ -4,10 +4,11 @@ import hashlib, json, shutil, subprocess, sys, time
 from pathlib import Path
 R = Path(__file__).resolve().parent.parent; (R/"reports").mkdir(exist_ok=True)
 def tree():
-    h = hashlib.sha1()
+    m = {}
     for f in sorted(R.rglob("*")):
-        if f.is_file() and not any(x in f.parts for x in ("reports", "node_modules", ".git", "__pycache__", ".lighthouseci", ".vercel")) and not f.name.startswith("_browser_"): h.update(f.relative_to(R).as_posix().encode() + f.read_bytes())
-    return h.hexdigest()
+        if f.is_file() and not any(x in f.parts for x in ("reports", "node_modules", ".git", "__pycache__", ".lighthouseci", ".vercel")) and not f.name.startswith("_browser_"):
+            m[f.relative_to(R).as_posix()] = hashlib.sha1(f.read_bytes()).hexdigest()
+    return m
 steps = []  # (name, critical, status, seconds, tail)
 def run(name, cmd, critical=True):
     t = time.time()
@@ -22,7 +23,9 @@ def run(name, cmd, critical=True):
         steps.append((name, critical, "FAIL", round(time.time() - t, 1), (out + "\nCommand timed out after 60 seconds")[-2500:]))
         return False
 before = tree(); run("Rebuild from source (build.py)", [sys.executable, "build.py"])
-after = tree(); steps.append(("Generated files are up to date (rebuild changed nothing)", True, "PASS" if before == after else "FAIL", 0, "commit the rebuilt files" if before != after else "no text file changed"))
+after = tree()
+diff_files = [k for k in sorted(set(before) | set(after)) if before.get(k) != after.get(k)]
+steps.append(("Generated files are up to date (rebuild changed nothing)", True, "PASS" if not diff_files else "FAIL", 0, ("changed: " + ", ".join(diff_files[:10])) if diff_files else "no text file changed"))
 run("Static audit (tools/audit.py)", [sys.executable, "tools/audit.py"])
 run("Optional build modes and CSP (tools/test_build_modes.py)", [sys.executable, "tools/test_build_modes.py"])
 run("Form logic (tools/test_lead.js)", ["node", "tools/test_lead.js"])
