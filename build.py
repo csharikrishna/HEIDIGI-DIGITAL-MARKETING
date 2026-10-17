@@ -549,6 +549,19 @@ def write_ai_discovery():
     well_known = R/".well-known"; well_known.mkdir(parents=True, exist_ok=True)
     (well_known/"ai-catalog.json").write_text(cat_json, encoding="utf-8")
 
+def security_expires():
+    sec = R/".well-known"/"security.txt"
+    if sec.exists():
+        m = re.search(r"Expires:\s*(\d{4}-\d{2}-\d{2})", sec.read_text(encoding="utf-8"))
+        if m:
+            try:
+                curr = datetime.date.fromisoformat(m.group(1))
+                if curr > datetime.date.today() + datetime.timedelta(days=30):
+                    return m.group(1)
+            except ValueError:
+                pass
+    return (datetime.date.today() + datetime.timedelta(days=365)).isoformat()
+
 def copy_public_output():
     dist = R/"dist"
     if dist.exists(): shutil.rmtree(dist)
@@ -561,9 +574,9 @@ def copy_public_output():
     for name in ("sitemap.xml", "robots.txt", "manifest.webmanifest", "favicon.ico", "llms.txt", "llms-full.txt", "ai-catalog.json"):
         if (R/name).exists():
             shutil.copy2(R/name, dist/name)
-    sec = dist/".well-known"/"security.txt"; sec.parent.mkdir(parents=True, exist_ok=True)
-    expires = (datetime.date.today() + datetime.timedelta(days=365)).isoformat()
-    sec.write_text(f"Contact: mailto:{EMAIL}\nPreferred-Languages: en, te\nExpires: {expires}T00:00:00Z\nCanonical: {U('/.well-known/security.txt')}\n", encoding="utf-8")
+    if (R/".well-known"/"security.txt").exists():
+        sec = dist/".well-known"/"security.txt"; sec.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(R/".well-known"/"security.txt", sec)
     if (R/".well-known"/"ai-catalog.json").exists():
         aic = dist/".well-known"/"ai-catalog.json"; aic.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(R/".well-known"/"ai-catalog.json", aic)
@@ -702,7 +715,7 @@ Sitemap: {U('/sitemap.xml')}
         ]
     }, indent=2) + "\n", encoding="utf-8")
     sec = R/".well-known"/"security.txt"; sec.parent.mkdir(parents=True, exist_ok=True)
-    expires = (datetime.date.today() + datetime.timedelta(days=365)).isoformat()
+    expires = security_expires()
     sec.write_text(f"Contact: mailto:{EMAIL}\nPreferred-Languages: en, te\nExpires: {expires}T00:00:00Z\nCanonical: {U('/.well-known/security.txt')}\n", encoding="utf-8")
     write_ai_discovery()
     write_headers()

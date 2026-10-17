@@ -24,7 +24,7 @@ with sync_playwright() as p:
             pg.click("#burger"); ck(pg.evaluate("document.getElementById('burger').getAttribute('aria-expanded')") == "true" and pg.evaluate("!document.getElementById('nav').hasAttribute('inert')"), "mobile: menu opens")
             pg.screenshot(path=str(TMP / "mobile_menu.png")); pg.keyboard.press("Escape")
             ck(pg.evaluate("document.activeElement.id") == "burger" and pg.evaluate("!document.body.classList.contains('open')"), "mobile: Escape closes and returns focus")
-            pg.click("#burger"); pg.click("#nav a[href='/#services']".replace("#services", "#about")); pg.wait_for_timeout(400)
+            pg.click("#burger"); pg.click("#nav a[href='/#clients']"); pg.wait_for_timeout(400)
             ck(pg.evaluate("!document.body.classList.contains('open')"), "mobile: link click closes menu")
         # form
         pg.goto(B + "/?service=branding#contact"); ck(pg.eval_on_selector("#f-service", "e=>e.value") == "branding", f"{name}: service preselected from URL")
