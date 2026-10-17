@@ -752,7 +752,7 @@ def write_headers():
     h = headers(); host = DOM.split("//")[1]; alt = host[4:] if host.startswith("www.") else "www." + host
     cache = [("/assets/css/*", IMM), ("/assets/js/*", IMM), ("/assets/fonts/*", WEEK), ("/assets/og/*", WEEK), ("/assets/work/*", WEEK), ("/assets/clients/*", WEEK)]
     (R/"_headers").write_text("# Generated headers for non-Vercel static hosts. Vercel uses vercel.json.\n/*\n" + "".join(f"  {k}: {v}\n" for k, v in h) + "".join(f"{p}\n  Cache-Control: {c}\n" for p, c in cache), encoding="utf-8")
-    vc = {"buildCommand": "python3 -m pip install -r requirements.txt && python3 build.py", "outputDirectory": "dist", "cleanUrls": False, "trailingSlash": True,
+    vc = {"outputDirectory": "dist", "cleanUrls": False, "trailingSlash": True,
           "headers": [{"source": "/(.*)", "headers": [{"key": k, "value": v} for k, v in h]}] + [{"source": p.replace("/*", "/(.*)"), "headers": [{"key": "Cache-Control", "value": c}]} for p, c in cache],
           "redirects": [{"source": "/(.*)", "has": [{"type": "host", "value": alt}], "destination": DOM + "/$1", "permanent": True}]}
     (R/"vercel.json").write_text(json.dumps(vc, indent=1) + "\n", encoding="utf-8")
