@@ -2,6 +2,8 @@
 """Static site generator for Hei Digi. Run: python3 build.py  (needs Pillow). Output is plain HTML committed to the project."""
 import json, re, hashlib, html, datetime, textwrap, sys, urllib.parse, shutil, subprocess, os
 from pathlib import Path
+_orig_write_text = Path.write_text
+Path.write_text = lambda self, data, encoding="utf-8", errors=None, newline="\n": _orig_write_text(self, data, encoding=encoding, errors=errors, newline=newline)
 from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, str(Path(__file__).parent / "content"))
 from services import S, HOME_FAQ
@@ -24,7 +26,11 @@ GEO_REGION = C.get("geoRegion", "IN-AP")
 GEO_PLACENAME = C.get("geoPlacename", "Tirupati, South Andhra Pradesh")
 FONTS = all((R/"assets/fonts"/f).exists() for f in ("inter.woff2", "sora.woff2"))
 LEAD = C.get("leadEndpoint", ""); TSK = C.get("turnstileSiteKey", ""); HSTS = int(C.get("hstsMaxAge", 0)); UPD = C.get("legalUpdated", "2026-10-09"); AN = C["analytics"]
-def av(p): return p + "?v=" + hashlib.sha1((R/p.lstrip("/")).read_bytes()).hexdigest()[:8]
+def av(p):
+    raw = (R/p.lstrip("/")).read_bytes()
+    if p.endswith((".css", ".js", ".html", ".txt", ".json", ".xml", ".svg")):
+        raw = raw.replace(b"\r\n", b"\n")
+    return p + "?v=" + hashlib.sha1(raw).hexdigest()[:8]
 def fontlinks():
     # Prefer self-hosted fonts if the one-time fetch has been completed; otherwise use fast local system fonts.
     if FONTS:
