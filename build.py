@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, str(Path(__file__).parent / "content"))
 from services import S, HOME_FAQ
 from legal import privacy, terms
-from extended_content import SERVICE_DETAILS, INDUSTRIES, LOCATIONS, BLOGS
+from extended_content import SERVICE_DETAILS, INDUSTRIES, LOCATIONS, BLOGS, TIRUPATI_PILLAR
 R = Path(__file__).parent
 C = json.loads((R/"site.config.json").read_text(encoding="utf-8"))
 raw = (R/"assets/js/data.js").read_text(encoding="utf-8")
@@ -127,9 +127,11 @@ if MAPS_URL: ORG["hasMap"] = MAPS_URL
 if C["socials"]: ORG["sameAs"] = [s["url"] for s in C["socials"]]
 def normalise_title(title):
     title = re.sub(r"\s+", " ", str(title)).strip()
+    if 50 <= len(title) <= 60 and (title.endswith(" | HeiDigi") or title.endswith(" | Hei Digi")):
+        return title
     suffix = " | Hei Digi"
     # Standardise the brand suffix and preserve whole words if a title is too long.
-    core = re.sub(r"\s*\|\s*Hei Digi(?:, Tirupati)?$", "", title).strip()
+    core = re.sub(r"\s*\|\s*Hei\s*Digi(?:, Tirupati)?$", "", title, flags=re.IGNORECASE).strip()
     if not core:
         core = title
     if len(core + suffix) > 60:
@@ -185,7 +187,7 @@ def footer():
     soc = "".join(f'<li><a href="{esc(s["url"])}" rel="me noopener" target="_blank">{esc(s["label"])}</a></li>' for s in C["socials"])
     return f'''<footer><div class="wrap fgrid"><div><b>Hei Digi</b><p>Your Digital Presence. Our Creative Strategy.</p><p>{C["city"]}, {C["region"]}, India</p></div>
 <nav aria-label="Services"><h2>Services</h2><ul>{sv}</ul></nav>
-<nav aria-label="Company"><h2>Explore</h2><ul><li><a href="/about/">About Hei Digi</a></li><li><a href="/#clients">Our Clients</a></li><li><a href="/industries/">Industries</a></li><li><a href="/locations/">Service Areas</a></li><li><a href="/blog/">Marketing Guides</a></li><li><a href="/#process">Process</a></li><li><a href="/contact/">Contact</a></li></ul></nav>
+<nav aria-label="Company"><h2>Explore</h2><ul><li><a href="/about/">About Hei Digi</a></li><li><a href="/#clients">Our Clients</a></li><li><a href="/industries/">Industries</a></li><li><a href="/locations/">Service Areas</a></li><li><a href="/digital-marketing-agency-in-tirupati/">Tirupati Agency</a></li><li><a href="/blog/">Marketing Guides</a></li><li><a href="/#process">Process</a></li><li><a href="/contact/">Contact</a></li></ul></nav>
 <div><h2>Contact</h2><ul><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="tel:{PHONE}">{C["phoneDisplay"]}</a></li><li><a href="https://wa.me/{PHONE.lstrip("+")}" target="_blank" rel="noopener" data-cta="footer_whatsapp">WhatsApp</a></li>{f'<li><a href="{MAPS_URL}" target="_blank" rel="noopener">Get directions</a></li>' if MAPS_URL else ''}{soc}</ul><p class="footer-address">{esc(ADDRESS.get("streetAddress", ""))}, {esc(ADDRESS.get("addressLocality", C["city"]))}, {esc(ADDRESS.get("addressRegion", C["region"]))} {esc(ADDRESS.get("postalCode", ""))}</p></div></div>
 <div class="wrap copy">© <span id="yr">{datetime.date.today().year}</span> Hei Digi, {C["city"]}. · <a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Service</a> · <a href="/cookie-policy/">Cookie Policy</a> · <a href="/disclaimer/">Disclaimer</a><span id="consent-slot"></span></div></footer>
 <a class="wa-float" href="https://wa.me/{PHONE.lstrip("+")}?text={urllib.parse.quote('Hi Hei Digi, I would like to discuss digital marketing for my business.') }" target="_blank" rel="noopener" aria-label="Chat with Hei Digi on WhatsApp" data-cta="floating_whatsapp"><svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 2.3A13.6 13.6 0 0 0 4.4 23l-1.8 6.5 6.7-1.8A13.7 13.7 0 1 0 16 2.3zm0 24.8c-2.1 0-4.1-.6-5.9-1.7l-.4-.2-3.9 1.1 1.1-3.8-.3-.4A11.2 11.2 0 1 1 16 27.1zm6.2-8.4c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a9.2 9.2 0 0 1-2.7-1.7 10.1 10.1 0 0 1-1.9-2.4c-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.1 1.4 3.3c.2.2 2.3 3.6 5.6 5 .8.3 1.4.5 1.9.6.8.3 1.6.2 2.2.1.7-.1 1.8-.7 2.1-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"/></svg><b>Chat on WhatsApp</b></a>
@@ -416,6 +418,7 @@ def source_files_for(path):
     if path.startswith("/blog/") or path.startswith("/industries/") or path.startswith("/locations/") or path == "/industries/" or path == "/locations/": return ["build.py", "content/extended_content.py"]
     if path in ("/privacy/", "/terms/", "/cookie-policy/", "/disclaimer/"): return ["build.py", "content/legal.py", "site.config.json"]
     if path == "/contact/" or path == "/about/": return ["build.py", "site.config.json"]
+    if path == "/digital-marketing-agency-in-tirupati/": return ["build.py", "content/extended_content.py"]
     if path.startswith("/work/"): return ["build.py", "assets/js/data.js", "assets/work/hero-coach-sri-profile.webp"]
     return ["build.py"]
 GIT_DATES = {}
@@ -479,6 +482,10 @@ def write_ai_discovery():
 - [Marketing Guides Hub]({U('/blog/')}): Plain-language guides on local SEO, Google Business Profile, Meta Ads, and reporting.
 {blog_list}
 
+## Featured Authority Guides
+
+- [Best Digital Marketing Agency in Tirupati]({U('/digital-marketing-agency-in-tirupati/')}): Comprehensive guide to digital marketing services, SEO, Meta Ads, social media marketing, and website design for businesses in Tirupati and Andhra Pradesh.
+
 ## Legal & Compliance Policies
 
 - [Privacy Policy]({U('/privacy/')}): Data protection standards under India's Digital Personal Data Protection Act (DPDPA 2023).
@@ -511,6 +518,9 @@ def write_ai_discovery():
     full_blocks.append("## Practical Marketing Guides\n")
     for b in BLOGS:
         full_blocks.append(f"### {b['title']}\n**URL:** {U('/blog/' + b['slug'] + '/')}\n\n{b['desc']}\n")
+
+    full_blocks.append("## Featured Authority Guides\n")
+    full_blocks.append(f"### Best Digital Marketing Agency in Tirupati\n**URL:** {U('/digital-marketing-agency-in-tirupati/')}\n\nComprehensive reference and service guide for businesses looking for the best digital marketing agency in Tirupati, Andhra Pradesh. Covers SEO, local search optimization, Google Business Profile management, Meta Ads (Facebook & Instagram), creative design, website development, founder branding, and specialized marketing solutions for healthcare, education, real estate, retail, e-commerce, and professional firms.\n")
 
     full_blocks.append("## Legal & Regulatory Compliance\n")
     full_blocks.append(f"- **Privacy Policy ({U('/privacy/')}):** Privacy framework compliant with India's Digital Personal Data Protection Act (DPDPA 2023).\n- **Terms of Service ({U('/terms/')}):** Professional service agreement, scope limitations, and transparent billing.\n- **Cookie Policy ({U('/cookie-policy/')}):** Zero third-party trackers before explicit consent.\n- **Marketing Disclaimer ({U('/disclaimer/')}):** Explicit disclaimer separating agency fees from advertising spend; no synthetic ranking or follower guarantees.\n")
@@ -548,6 +558,13 @@ def write_ai_discovery():
                 "type": "text/html",
                 "description": "Direct enquiry and digital marketing consultation for businesses in Tirupati and South Andhra Pradesh.",
                 "url": U("/contact/")
+            },
+            {
+                "identifier": "urn:ai:heidigi.com:landing:digital-marketing-agency-in-tirupati",
+                "displayName": "Best Digital Marketing Agency in Tirupati",
+                "type": "text/html",
+                "description": "Leading full-service digital marketing agency in Tirupati offering SEO, Google Business Profile management, Meta Ads, social media marketing, and website development.",
+                "url": U("/digital-marketing-agency-in-tirupati/")
             }
         ]
     }
@@ -830,7 +847,8 @@ def extra_pages():
     pages[li] = (head("Digital Marketing in Tirupati & South AP | Hei Digi", "Explore digital marketing services across Tirupati and South Andhra Pradesh, including Chittoor, Srikalahasti, Renigunta, Madanapalle and Nellore hubs.", li, og("locations", "Hei Digi service areas", "South Andhra Pradesh"), [ORG, bc_ld(locitems), {"@context":"https://schema.org","@type":"CollectionPage","name":"Hei Digi service areas","url":U(li)}]) + "<body>" + lbody + footer(), True)
     for loc in LOCATIONS:
         path="/locations/"+loc["slug"]+"/"; items=[("Home","/"),("Service areas","/locations/"),(loc["name"],None)]
-        body=f'''{header()}<main id="main"><section class="phero"><div class="wrap narrow">{crumbs(items)}<h1>Digital marketing in {esc(loc["name"])}</h1><p class="lead">{esc(loc["intro"])}</p></div></section><article class="sec"><div class="wrap narrow prose">{sections_html(loc["sections"])}<p><a href="/services/seo/">SEO services</a> · <a href="/services/google-business-profile-management/">Google Business Profile</a> · <a href="/contact/">Contact Hei Digi</a></p></div></article>{cta_block("marketing support in "+loc["name"])}</main>'''
+        tiru_link = ' · <a href="/digital-marketing-agency-in-tirupati/">Agency guide</a>' if loc["slug"] == "tirupati" else ''
+        body=f'''{header()}<main id="main"><section class="phero"><div class="wrap narrow">{crumbs(items)}<h1>Digital marketing in {esc(loc["name"])}</h1><p class="lead">{esc(loc["intro"])}</p></div></section><article class="sec"><div class="wrap narrow prose">{sections_html(loc["sections"])}<p><a href="/services/seo/">SEO services</a> · <a href="/services/google-business-profile-management/">Google Business Profile</a>{tiru_link} · <a href="/contact/">Contact Hei Digi</a></p></div></article>{cta_block("marketing support in "+loc["name"])}</main>'''
         pages[path]=(head(loc["title"],loc["desc"],path,og("location-"+loc["slug"],loc["title"],"Hei Digi · Andhra Pradesh"),[ORG,bc_ld(items),{"@context":"https://schema.org","@type":"WebPage","name":loc["title"],"url":U(path)}])+"<body>"+body+footer(),True)
 
     # Legal documents beyond the privacy/terms pages. The privacy/legal text should be reviewed by an Indian lawyer before launch.
@@ -863,7 +881,239 @@ def extra_pages():
         # Replace its content with source-qualified reporting. The visible source artwork is the only basis for the campaign numbers.
         pass
 
+def tirupati_pillar_page():
+    path = f"/{TIRUPATI_PILLAR['slug']}/"
+    items = [("Home", "/"), (TIRUPATI_PILLAR["h1"], None)]
+    social_image = og(TIRUPATI_PILLAR["slug"], TIRUPATI_PILLAR["h1"], "Hei Digi · Tirupati")
+    web_page_ld = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": TIRUPATI_PILLAR["title"],
+        "url": U(path),
+        "description": normalise_description(TIRUPATI_PILLAR["desc"])
+    }
+    faq_ld = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
+            for q, a in TIRUPATI_PILLAR["faq"]
+        ]
+    }
+    ld = [ORG, bc_ld(items), web_page_ld, faq_ld]
+
+    body = f'''{header()}<main id="main">
+<section class="phero"><div class="wrap narrow">{crumbs(items)}
+<p class="pill">Best Digital Marketing Agency in Tirupati · South Andhra Pradesh</p>
+<h1>{esc(TIRUPATI_PILLAR["h1"])}</h1>
+<p class="lead">Looking for the best digital marketing agency in Tirupati? HeiDigi helps businesses grow with SEO, Google Business Profile optimization, Meta Ads, social media marketing and website design. From local retail showrooms to multi-speciality hospitals, educational institutes, and real estate developers, we provide data-backed strategies that generate qualified leads and measurable revenue.</p>
+<div class="btns">
+  <a class="btn" href="#contact" data-cta="consultation_free_hero">Get a Free Consultation</a>
+  <a class="btn ghost" href="{wa_link('Hi Hei Digi, I would like to discuss digital marketing for my business in Tirupati.')}" target="_blank" rel="noopener noreferrer" data-cta="whatsapp_tirupati_hero"><svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 2.3A13.6 13.6 0 0 0 4.4 23l-1.8 6.5 6.7-1.8A13.7 13.7 0 1 0 16 2.3zm0 24.8c-2.1 0-4.1-.6-5.9-1.7l-.4-.2-3.9 1.1 1.1-3.8-.3-.4A11.2 11.2 0 1 1 16 27.1zm6.2-8.4c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a9.2 9.2 0 0 1-2.7-1.7 10.1 10.1 0 0 1-1.9-2.4c-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.1 1.4 3.3c.2.2 2.3 3.6 5.6 5 .8.3 1.4.5 1.9.6.8.3 1.6.2 2.2.1.7-.1 1.8-.7 2.1-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"/></svg> Chat With Us on WhatsApp</a>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap prose">
+<h2>Digital Marketing Services in Tirupati</h2>
+<p>In today's fast-moving business climate, having a simple storefront or relying solely on traditional advertising agency channels—such as billboard design and consulting, outdoor advertising, print ads, radio, telemarketing, and direct mail—is no longer sufficient to sustain long-term growth. Tirupati has evolved into a bustling regional commercial, healthcare, and educational powerhouse in South Andhra Pradesh. From the retail corridors of KT Road and Gandhi Road to the educational campuses near SV University and the expanding manufacturing corridors in Renigunta, local consumers, patients, students, and B2B buyers now use search engines and social media before deciding where to spend.</p>
+<p>As the leading digital marketing agency in Tirupati, a trusted digital marketing agency in India, and an established digital marketing company in Andhra Pradesh, HeiDigi provides end-to-end digital marketing solutions that help local enterprises build enduring market prominence. We assist established shops, clinics, builders, and educational institutions in transitioning from offline to online marketing services in India and offline to online marketing services in Tirupati, establishing cohesive digital footprints that drive tangible commercial results. Our integrated methodology combines search engine optimisation, local SEO, paid advertising, social media marketing, content management, website design, and WhatsApp automation services into a unified sales strategy focused on high-quality lead generation services in Tirupati and lead generation services in India.</p>
+<p>Whether you require medical SEO services in Tirupati, school admission marketing services in Tirupati, real estate lead generation services in India, or performance marketing for online brands across India, HeiDigi provides custom marketing strategies grounded in objective performance data, technical audits, and transparent reporting. We are recognized as the best company in Tirupati, delivering professional digital marketing services in Andhra Pradesh and best digital marketing services in India.</p>
+</div></section>
+
+<section class="sec alt"><div class="wrap">
+<h2>Why Choose HeiDigi as Your Digital Marketing Agency?</h2>
+<p class="mut">Discover what establishes HeiDigi as the result-oriented digital marketing company in Andhra Pradesh and the preferred growth partner for Tirupati businesses.</p>
+<div class="grid3">
+  <article class="card">
+    <h3>Result-Oriented Digital Marketing Company in Andhra Pradesh</h3>
+    <p>We prioritize verifiable commercial outcomes over empty vanity metrics. Recognized as the best digital marketing company in Andhra Pradesh, top digital marketing agency in Andhra Pradesh, No.1 digital marketing company in Andhra Pradesh, and leading digital marketing agency in Andhra Pradesh, every campaign is engineered to produce genuine telephone inquiries, WhatsApp conversations, showroom walk-ins, and qualified business opportunities that translate directly into revenue.</p>
+  </article>
+  <article class="card">
+    <h3>Full-Service Capabilities Under One Roof</h3>
+    <p>As a full-service digital marketing company in Andhra Pradesh, we provide comprehensive end-to-end digital marketing solutions from technical audits, link building, and Google ranking SEO services Andhra Pradesh to Facebook ads agency in Andhra Pradesh campaigns, Google Ads company in Andhra Pradesh strategies, PPC advertising company in Andhra Pradesh management, mobile marketing, custom marketing, software services, CRM, ERP, and APPS.</p>
+  </article>
+  <article class="card">
+    <h3>Deep Local Market Knowledge in Tirupati &amp; AP</h3>
+    <p>Rooted in Tirupati with active regional coverage across Srikalahasti, Chittoor, Renigunta, Chandragiri, Madanapalle, and Nellore, our digital marketing experts in Andhra Pradesh understand regional search behavior, local digital marketing services Andhra Pradesh requirements, seasonal pilgrim influxes, and multilingual customer intent across Telugu and English.</p>
+  </article>
+  <article class="card">
+    <h3>Transparent Reporting &amp; Zero False Guarantees</h3>
+    <p>As a trusted digital marketing agency in Andhra Pradesh, we uphold strict ethical marketing standards. We do not promise synthetic number-one rankings or fake followers. We deliver transparent monthly reports based on verified Google Search Console, Google Business Profile insights, and Meta Ads Manager metrics, with ad spend kept separate from agency service fees.</p>
+  </article>
+  <article class="card">
+    <h3>Strategic Founder Leadership &amp; AI Marketing</h3>
+    <p>Founded and led by Coach Sri, with website development by Gorinta Sandeep Sahay, HeiDigi blends blue-ocean positioning and sales strategy with advanced AI marketing workflows, digital tool integration, videography, photography, and founder branding &amp; growth services.</p>
+  </article>
+  <article class="card">
+    <h3>Custom Marketing for Small Businesses &amp; Startups</h3>
+    <p>We provide affordable digital marketing company in Andhra Pradesh solutions tailored as a digital marketing company for small businesses in Andhra Pradesh and digital marketing company for startups in Andhra Pradesh, delivering agile scalability and measurable return on investment without lock-in contracts.</p>
+  </article>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>Our Digital Marketing Services</h2>
+<p class="mut">Explore our full suite of digital marketing services in Tirupati, engineered to build search visibility, capture buyer intent, and convert prospects into customers.</p>
+<div class="grid3">
+  <article class="card">
+    <h3>Search Engine Optimization (SEO) &amp; Local SEO</h3>
+    <p>As the premier <a href="/services/seo/">SEO agency in Tirupati</a>, we provide comprehensive <a href="/services/seo/">SEO services in Tirupati</a> and <a href="/services/seo/">SEO services in India</a>. Our team acts as the best SEO company in Andhra Pradesh, top SEO services in Andhra Pradesh, and premier SEO agency in Andhra Pradesh. We conduct technical audits, link building, crawlability reviews, keyword mapping, on-page optimization, and Local SEO company in Andhra Pradesh solutions. We ensure high-impact Google ranking SEO services Andhra Pradesh on every major search Engine for sustainable search engine optimisation and website SEO optimization company in Andhra Pradesh standards.</p>
+    <a href="/services/seo/" data-cta="tirupati_pillar_seo">Explore SEO services ↗</a>
+  </article>
+  <article class="card">
+    <h3>Meta Ads &amp; Pay-Per-Click (PPC) Consulting</h3>
+    <p>As a specialized <a href="/services/meta-ads/">Meta Ads agency in Tirupati</a> and pay-per-click consulting partner, we build high-converting paid advertising funnels across Facebook and Instagram. Acting as a top Facebook ads agency in Andhra Pradesh, Google Ads company in Andhra Pradesh, and PPC advertising company in Andhra Pradesh, we provide Google Ads management services and targeted lead generation funnels with transparent budget pacing. Explore our <a href="/services/meta-ads/">Meta Ads management</a>.</p>
+    <a href="/services/meta-ads/" data-cta="tirupati_pillar_meta_ads">Explore Meta Ads ↗</a>
+  </article>
+  <article class="card">
+    <h3>Social Media Marketing &amp; Management</h3>
+    <p>As a leading <a href="/services/social-media-marketing/">social media marketing agency in Tirupati</a> and prominent social media marketing company in Andhra Pradesh, we deliver full-scale social media marketing services. We serve as an innovative Instagram marketing agency in Andhra Pradesh, influencer marketing agency in Andhra Pradesh, and influencer marketing agency in India, developing monthly calendars, viral short-form Reels, and active engagement routines. Discover our <a href="/services/social-media-marketing/">Social Media Marketing</a>.</p>
+    <a href="/services/social-media-marketing/" data-cta="tirupati_pillar_smm">Explore Social Media Marketing ↗</a>
+  </article>
+  <article class="card">
+    <h3>Website Design &amp; Web Development</h3>
+    <p>As a reputable <a href="/services/creative-design/">website design company in Tirupati</a>, we provide high-performance Web design, WEB DEVELOPMENT, website development services in India, and website development services in Tirupati. As a trusted partner for website development &amp; digital marketing Andhra Pradesh, we engineer lightning-fast websites, custom landing pages, responsive web apps, software services, APPS, CRM, ERP, and complete online service platforms. View our <a href="/services/creative-design/">Website Design</a> solutions.</p>
+    <a href="/services/creative-design/" data-cta="tirupati_pillar_web_design">Explore Website Design ↗</a>
+  </article>
+  <article class="card">
+    <h3>Google Business Profile Optimization Services</h3>
+    <p>Our Google Business Profile optimization services and local SEO company in Andhra Pradesh team elevates your visibility in the Google Maps 3-pack. Serving as a dedicated digital marketing agency for local businesses in Andhra Pradesh, we manage verified locations, operating hours, review generation, geo-tagged photos, and weekly posts to drive local phone calls and showroom visits. Learn more about <a href="/services/google-business-profile-management/">Google Business Profile management</a>.</p>
+    <a href="/services/google-business-profile-management/" data-cta="tirupati_pillar_gbp">Explore Google Business Profile ↗</a>
+  </article>
+  <article class="card">
+    <h3>Branding, Logo Design &amp; Creative Graphic Design</h3>
+    <p>Establish a memorable brand identity with custom Logo design, Graphic design, and comprehensive branding guidelines. As a premier branding &amp; digital marketing company in Andhra Pradesh, we deliver branding &amp; creative services in India and branding &amp; creative services in Tirupati, including billboard design and consulting, outdoor advertising, print ads, brochures, direct mail, and premium packaging. Explore our <a href="/services/branding/">Branding</a> and <a href="/services/creative-design/">Creative Graphic Design</a> offerings.</p>
+    <a href="/services/branding/" data-cta="tirupati_pillar_branding">Explore Branding Services ↗</a>
+  </article>
+  <article class="card">
+    <h3>Video Editing, Videography &amp; AI Marketing</h3>
+    <p>Produce cinematic video content, TV &amp; video campaigns, on-location videography, professional photography, advertising photographer shoots, and videography digital promotion services. Our AI marketing workflows combine modern digital tool suites with rapid creative testing on Instagram Reels and YouTube. Learn about our <a href="/services/video-editing-ai-videos/">Video Editing &amp; AI Videos</a>.</p>
+    <a href="/services/video-editing-ai-videos/" data-cta="tirupati_pillar_video">Explore Video &amp; AI Production ↗</a>
+  </article>
+  <article class="card">
+    <h3>Founder &amp; Personal Branding Services</h3>
+    <p>Elevate doctors, executives, and startup founders into respected industry authorities. We provide personal branding services in Tirupati, personal branding services in India, founder branding &amp; growth services, executive thought leadership articles, and online reputation management services. Discover <a href="/services/personal-branding/">Personal Branding</a>.</p>
+    <a href="/services/personal-branding/" data-cta="tirupati_pillar_personal_branding">Explore Personal Branding ↗</a>
+  </article>
+  <article class="card">
+    <h3>Content Strategy, WhatsApp Automation &amp; Training</h3>
+    <p>Implement structured content management, email marketing, affiliate marketing, B2B lead generation, telemarketing, and WhatsApp automation services. We also offer digital marketing training, Software Training Institute programs, and trainingon soft skills aligned with executive curriculum standards. Explore our <a href="/services/content-strategy/">Content Strategy</a>.</p>
+    <a href="/services/content-strategy/" data-cta="tirupati_pillar_content">Explore Content Strategy ↗</a>
+  </article>
+</div>
+</div></section>
+
+<section class="sec alt"><div class="wrap">
+<h2>How We Help Tirupati Businesses Generate Leads</h2>
+<p class="mut">Our structured 4-stage lead generation system bridges consumer intent with measurable sales conversations.</p>
+<div class="grid4">
+  <article class="card">
+    <h3>1. Business to Business (B2B) &amp; Customer Intent Mapping</h3>
+    <p>We analyze customer search queries, buyer motivations, and competitor positioning across Tirupati and Andhra Pradesh. We craft clear value propositions that directly answer the core questions prospective buyers ask before contacting a provider.</p>
+  </article>
+  <article class="card">
+    <h3>2. High-Intent Traffic Generation (SEO &amp; Paid Ads)</h3>
+    <p>We channel targeted traffic to your brand using organic Search Engine Optimisation, local map pack rankings, and hyper-targeted Meta Ads and Google Ads company in Andhra Pradesh campaigns tailored to Tirupati, Chittoor, and surrounding commercial corridors.</p>
+  </article>
+  <article class="card">
+    <h3>3. Conversion-Engineered Landing Pages &amp; WhatsApp Routing</h3>
+    <p>We direct traffic to high-speed mobile landing pages equipped with clear calls-to-action, instant form validation, and direct WhatsApp click-to-chat buttons, ensuring an effortless pathway between prospective buyers and your intake team.</p>
+  </article>
+  <article class="card">
+    <h3>4. Performance Tracking &amp; Sales Strategy Alignment</h3>
+    <p>We review inquiry quality, cost-per-lead, and conversion velocity alongside your sales team. Monthly marketing reports help us refine campaign creative, adjust audience parameters, and scale high-performing marketing channels.</p>
+  </article>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>Industries We Serve in Tirupati</h2>
+<p class="mut">Specialized marketing frameworks engineered for the regulatory, clinical, and commercial requirements of regional industry verticals.</p>
+<div class="grid3">
+  <article class="card">
+    <h3>Healthcare Digital Marketing Services &amp; Hospital SEO</h3>
+    <p>We provide comprehensive healthcare digital marketing services in Tirupati and healthcare digital marketing services in India. Our clinical marketing solutions include hospital digital marketing services in Tirupati, hospital digital marketing services in India, and clinic digital marketing agency in India support. We deliver specialized doctor branding services in Tirupati and doctor branding services in India, high-authority medical SEO services in India and medical SEO services in Tirupati, engaging hospital social media marketing in India and hospital social media marketing inTirupati, targeted healthcare Google Ads services in Tirupati and healthcare Google Ads services in India, HIPAA/MCI-compliant medical website development services in India and medical website development services in Tirupati, and full digital marketing services for hospitals in Andhra Pradesh. Visit our <a href="/industries/healthcare/">Healthcare Marketing</a> hub.</p>
+    <a href="/industries/healthcare/">Learn more about healthcare marketing ↗</a>
+  </article>
+  <article class="card">
+    <h3>School &amp; College Digital Marketing Services</h3>
+    <p>HeiDigi delivers dedicated school digital marketing services in Tirupati and school digital marketing services in india to accelerate student enrolments. We operate as a premier college digital marketing agency in India and college digital marketing agency in Tirupati, offering educational institute marketing services in Tirupati and educational institute marketing services in India. Our campaigns power high-conversion school admission marketing services in India, school admission marketing services inTirupati, authoritative education SEO services in Tirupati, education SEO services in India, coaching center digital marketing in India, coaching center digital marketing in Tirupati, online admission lead generation for schools, and full digital marketing agency for schools in Andhra Pradesh programs. Explore our <a href="/industries/education/">Education Marketing</a> page.</p>
+    <a href="/industries/education/">Learn more about education marketing ↗</a>
+  </article>
+  <article class="card">
+    <h3>Real Estate &amp; Construction Company Marketing</h3>
+    <p>We engineer targeted real estate digital marketing services in Tirupati and real estate digital marketing services in India to drive property site visits and bookings. As an experienced property marketing agency in India and property marketing agency in Tirupati, we support developers with builder digital marketing services in Tirupati and builder digital marketing services in India. Our performance funnels deliver high-velocity real estate lead generation services in India, real estate lead generation services in Tirupathi, construction company marketing services in Tirupati, construction company marketing services in India, real estate SEO services in India, real estate SEO services in Tirupati, and specialized digital marketing company for real estate Andhra Pradesh campaigns. See our <a href="/industries/steel-construction/">Steel &amp; Construction Marketing</a> solutions.</p>
+    <a href="/industries/steel-construction/">Learn more about construction marketing ↗</a>
+  </article>
+  <article class="card">
+    <h3>Retail Stores, Showrooms &amp; Local Businesses</h3>
+    <p>Maximize foot traffic with retail store digital marketing services in Tirupati and retail store digital marketing services in India. As an expert showroom marketing agency in India and showroom marketing agency in Tirupati, we deploy Google Business Profile optimization services, retail SEO services in Tirupati, and retail SEO services in India. We help merchants execute seamless offline to online marketing services in India and offline to online marketing services in Tirupati, acting as a trusted digital marketing agency for local businesses in Andhra Pradesh to drive showroom walk-ins and direct phone inquiries.</p>
+  </article>
+  <article class="card">
+    <h3>E-Commerce &amp; Online Store Marketing</h3>
+    <p>Scale direct-to-consumer sales with e-commerce digital marketing services in India and e-commerce digital marketing services in tirupati. We operate as an agile online store marketing agency in Tirupati and online store marketing agency in India, delivering certified Shopify marketing services in India, Shopify marketing services in Tirupati, high-intent e-commerce SEO services in Tirupati, e-commerce SEO services in India, performance marketing for online brands, and Amazon &amp; Flipkart marketing services to scale revenue profitably.</p>
+  </article>
+  <article class="card">
+    <h3>Restaurants, Hotels &amp; Hospitality Marketing</h3>
+    <p>Restaurant digital marketing services in Tirupati, restaurant digital marketing services in India, hotel Google Maps optimization services, pilgrim and traveler targeting, local food Reels, and seasonal tourism campaigns across the temple corridor. View our <a href="/industries/hospitality/">Hospitality Marketing</a> solutions.</p>
+    <a href="/industries/hospitality/">Learn more about hospitality marketing ↗</a>
+  </article>
+  <article class="card">
+    <h3>Beauty Salons, Spas &amp; Bridal Makeup Promotion</h3>
+    <p>We deliver premium beauty salon digital marketing services in Tirupati and beauty salon digital marketing services in India. Our creative campaigns provide bridal makeup marketing services in India, bridal makeup marketing services in Tirupathi, spa and wellness marketing agency in Tirupati support, spa and wellness marketing agency in India strategies, viral salon social media marketing in India, salon social media marketing inTirupathi, beauty brand SEO services in Tirupati, beauty brand SEO services in India, and makeup artist digital promotion services to book appointments continuously.</p>
+  </article>
+  <article class="card">
+    <h3>Corporate, Finance, CA &amp; Legal Firm Marketing</h3>
+    <p>Establish professional authority with corporate digital marketing services in India, corporate digital marketing services in TirupatiT, and business consulting &amp; marketing services. We provide financial services digital marketing in India, financial services digital marketing in Tirupati, insurance marketing services in Tirupati, insurance marketing services in India, CA &amp; accounting firm marketing services, legal firm digital marketing agency in India representation, legal firm digital marketing agency in Tirupati solutions, finance SEO services in Tirupati, and finance SEO services in India. Explore our <a href="/industries/professional-services/">Professional Services Marketing</a> page.</p>
+    <a href="/industries/professional-services/">Learn more about professional services ↗</a>
+  </article>
+  <article class="card">
+    <h3>Event Management, Wedding &amp; Creative Businesses</h3>
+    <p>Capture high-value bookings with event management digital marketing in Tirupati and event management digital marketing in India. We provide wedding marketing services in India, wedding marketing services in Tirupati, photography business marketing services, videography digital promotion services, event brand building services in Tirupati, and event brand building services in India to showcase celebrations and live productions.</p>
+  </article>
+  <article class="card">
+    <h3>Startups, Founders &amp; Professional Training</h3>
+    <p>Accelerate growth with startup digital marketing services in India and startup digital marketing services in Tirupati. We provide executive personal branding services in Tirupati, personal branding services in India, influencer marketing agency in India connections, founder branding &amp; growth services, and online reputation management services. For upskilling, we deliver digital marketing training, trainingon soft skills, Software Training Institute curriculums, and collaborate across Digital Marketing Acdemy Tirupati, Digital Marketing Institute Tirupati, Digital Marketing Acdemy, Digital Marketing Institute, Top Digital Marketing Institute, Digital Marketing Institute In Tirupati, and Top Digital Marketing Acdemy in Tirupati.</p>
+  </article>
+  <article class="card">
+    <h3>Regional Andhra Pradesh &amp; Local Business Presence</h3>
+    <p>Whether regional enterprises seek an online marketing company in Andhra Pradesh, an internet marketing agency in Andhra Pradesh, or a full-service SEO &amp; digital marketing company in Andhra Pradesh, HeiDigi delivers measurable growth. As an established digital marketing company Andhra Pradesh and digital marketing agency Andhra, we help organizations find the best digital marketing company near me in Andhra Pradesh Top digital marketing agency near me Andhra. If you need a top digital marketing agency near me Andhra, a proven digita marketing agency, or a reliable digital marketig company, HeiDigi delivers elite digital marketing India solutions with the best digital marketing services in India and the best digital marketing services inTirupati. We take pride in being recognized as the Best Company In Tirupati and best company in tirupati.</p>
+  </article>
+</div>
+</div></section>
+
+<section class="sec alt"><div class="wrap narrow">
+<h2>Frequently Asked Questions About Digital Marketing</h2>
+<p class="mut">Clear, straightforward answers to frequent questions regarding digital marketing services, SEO pricing, lead generation, and campaign reporting in Tirupati.</p>
+{faq_html(TIRUPATI_PILLAR["faq"])}
+</div></section>
+
+<section class="sec" id="contact"><div class="wrap contact-layout">
+<div>
+<h2>Contact the Best Digital Marketing Agency in Tirupati</h2>
+<p class="lead">Ready to grow your online visibility, capture high-intent local leads, and outpace regional competitors? Reach out to HeiDigi today for a strategic discussion about your business goals.</p>
+<address class="office-address">{esc(ADDRESS.get("streetAddress", ""))}, {esc(ADDRESS.get("addressLocality", C["city"]))}, {esc(ADDRESS.get("addressRegion", C["region"]))} {esc(ADDRESS.get("postalCode", ""))}</address>
+<p><b>Phone:</b> <a href="tel:{PHONE}" data-cta="pillar_contact_phone">{esc(C["phoneDisplay"])}</a></p>
+<p><b>Email:</b> <a href="mailto:{EMAIL}" data-cta="pillar_contact_email">{esc(EMAIL)}</a></p>
+<div class="btns">
+  <a class="btn" href="https://wa.me/{PHONE.lstrip('+')}?text={urllib.parse.quote('Hi Hei Digi, I would like to discuss digital marketing for my business.')}" target="_blank" rel="noopener noreferrer" data-cta="pillar_contact_whatsapp"><svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 2.3A13.6 13.6 0 0 0 4.4 23l-1.8 6.5 6.7-1.8A13.7 13.7 0 1 0 16 2.3zm0 24.8c-2.1 0-4.1-.6-5.9-1.7l-.4-.2-3.9 1.1 1.1-3.8-.3-.4A11.2 11.2 0 1 1 16 27.1zm6.2-8.4c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a9.2 9.2 0 0 1-2.7-1.7 10.1 10.1 0 0 1-1.9-2.4c-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.1 1.4 3.3c.2.2 2.3 3.6 5.6 5 .8.3 1.4.5 1.9.6.8.3 1.6.2 2.2.1.7-.1 1.8-.7 2.1-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"/></svg> Chat With Us on WhatsApp</a>
+  <a class="btn ghost contact-map" href="{esc(MAPS_URL)}" target="_blank" rel="noopener noreferrer" data-cta="pillar_contact_directions">Get directions in Google Maps ↗</a>
+  <a class="btn ghost" href="/contact/" data-cta="pillar_contact_page">Contact Us ↗</a>
+</div>
+<p class="mut">Serving Tirupati, Srikalahasti, Chittoor, Renigunta, Chandragiri, Madanapalle, Nellore, and all of Andhra Pradesh. Prefer our dedicated desk? Reach our team on our <a href="/contact/">Contact Us</a> page.</p>
+</div>
+<div>
+<h3>Tell us about your business</h3>
+<p class="mut">Fill out this quick consultation form. We will review your website and current presence and reply with practical recommendations.</p>
+{make_lead_form()}
+</div>
+</div></section>
+</main>'''
+
+    pages[path] = (head(TIRUPATI_PILLAR["title"], TIRUPATI_PILLAR["desc"], path, social_image, ld) + "<body>" + body + footer(), True)
+
 write_config(); P = prep_portfolio(); icons()
-home(P); service_pages(); work_pages(P); legal_pages(); extra_pages(); urls = write()
+home(P); service_pages(); work_pages(P); legal_pages(); extra_pages(); tirupati_pillar_page(); urls = write()
 print("pages:", len(urls)); print("warnings:", WARN or "none")
+
 
