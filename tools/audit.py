@@ -161,6 +161,40 @@ ok((PUBLIC/".well-known/security.txt").exists(), "security.txt is missing")
 ok((PUBLIC/"llms.txt").exists(), "llms.txt is missing from dist")
 ok((PUBLIC/"llms-full.txt").exists(), "llms-full.txt is missing from dist")
 ok((PUBLIC/".well-known/ai-catalog.json").exists(), ".well-known/ai-catalog.json is missing from dist")
+cat_p = PUBLIC/".well-known/ai-catalog.json"
+if cat_p.exists():
+    try:
+        cat_data = json.loads(cat_p.read_text(encoding="utf-8"))
+        ok(cat_data.get("specVersion") == "1.0", "ai-catalog.json missing or invalid specVersion")
+        entries = cat_data.get("entries", [])
+        ok(isinstance(entries, list) and len(entries) > 0, "ai-catalog.json entries must be non-empty list")
+        urn_pat = re.compile(r"^urn:air:[a-zA-Z0-9.-]+(:[a-zA-Z0-9._-]+)+$")
+        valid_media = {
+            "application/ai-catalog+json",
+            "application/agent-card+json",
+            "application/a2a-agent-card+json",
+            "application/mcp-server-card+json",
+            "application/agent-skills+zip",
+            "application/agent-skills+gzip",
+            'text/markdown; profile="urn:air:agent-skills"',
+            "application/ai-registry",
+            "application/ai-registry+json"
+        }
+        for e in entries:
+            ident = e.get("identifier", "")
+            ok(bool(urn_pat.match(ident)), f"ai-catalog entry '{ident}' does not match ARD RFC 8141 pattern")
+            ok(e.get("type") in valid_media, f"ai-catalog entry '{ident}' media type '{e.get('type')}' not standard")
+            queries = e.get("representativeQueries", [])
+            ok(isinstance(queries, list) and 2 <= len(queries) <= 5, f"ai-catalog entry '{ident}' missing 2-5 representativeQueries")
+            ok(all(isinstance(q, str) and q.strip() for q in queries), f"ai-catalog entry '{ident}' representativeQueries must be non-empty strings")
+            ok(bool(e.get("displayName")), f"ai-catalog entry '{ident}' missing displayName")
+            ok(bool(e.get("url")), f"ai-catalog entry '{ident}' missing url")
+            ok(bool(e.get("description")), f"ai-catalog entry '{ident}' missing description")
+    except Exception as ex:
+        ok(False, f"ai-catalog.json failed ARD validation: {ex}")
+style_css = (R/"assets/css/style.css").read_text(encoding="utf-8")
+ok("#075e54" in style_css.lower(), "wa-float dark green WCAG AA contrast color not found in style.css")
+ok(not re.search(r"\.wa-float\s*\{[^}]*background:\s*#128c7e", style_css, re.I), "wa-float still uses low-contrast #128c7e in style.css")
 ok((PUBLIC/"favicon.ico").exists(), "favicon.ico is missing from dist")
 ok((PUBLIC/"assets/favicon-32x32.png").exists(), "assets/favicon-32x32.png is missing from dist")
 ok((PUBLIC/"assets/favicon-16x16.png").exists(), "assets/favicon-16x16.png is missing from dist")

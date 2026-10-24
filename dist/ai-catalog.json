@@ -8,130 +8,220 @@
   },
   "entries": [
     {
-      "identifier": "urn:ai:heidigi.com:service:seo",
+      "identifier": "urn:air:heidigi.com:service:seo",
       "displayName": "Search Engine Optimization (SEO)",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Technical, on-page and local SEO built around how customers search.",
-      "url": "https://heidigi.com/services/seo/"
+      "url": "https://heidigi.com/services/seo/",
+      "representativeQueries": [
+        "SEO services in Tirupati for local business rankings",
+        "Technical and on-page search engine optimization agency",
+        "How to improve website Google search rankings in Andhra Pradesh"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:service:social-media-marketing",
+      "identifier": "urn:air:heidigi.com:service:social-media-marketing",
       "displayName": "Social Media Marketing",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "A consistent Instagram and Facebook presence for local brands.",
-      "url": "https://heidigi.com/services/social-media-marketing/"
+      "url": "https://heidigi.com/services/social-media-marketing/",
+      "representativeQueries": [
+        "Social media marketing agency for Instagram and Facebook in Tirupati",
+        "Monthly social media content calendar and Reels strategy",
+        "Instagram business page management and creative design"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:service:google-business-profile-management",
+      "identifier": "urn:air:heidigi.com:service:google-business-profile-management",
       "displayName": "Google Business Profile Management",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Accurate, active profiles that help local customers find you.",
-      "url": "https://heidigi.com/services/google-business-profile-management/"
+      "url": "https://heidigi.com/services/google-business-profile-management/",
+      "representativeQueries": [
+        "Google Business Profile optimization and Maps 3-pack ranking in Tirupati",
+        "Manage local business listing, customer reviews and hours on Google",
+        "How do I rank higher on Google Maps in Andhra Pradesh?"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:service:meta-ads",
+      "identifier": "urn:air:heidigi.com:service:meta-ads",
       "displayName": "Meta Ads",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Facebook and Instagram campaigns for leads and WhatsApp enquiries.",
-      "url": "https://heidigi.com/services/meta-ads/"
+      "url": "https://heidigi.com/services/meta-ads/",
+      "representativeQueries": [
+        "Facebook and Instagram ads agency for lead generation in Tirupati",
+        "Run click-to-WhatsApp ad campaigns on Meta",
+        "Targeted paid social advertising for hospitals, schools and retail"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:service:creative-design",
+      "identifier": "urn:air:heidigi.com:service:creative-design",
       "displayName": "Creative Design",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Posts, posters, carousels and banners in one consistent look.",
-      "url": "https://heidigi.com/services/creative-design/"
+      "url": "https://heidigi.com/services/creative-design/",
+      "representativeQueries": [
+        "Graphic design services for social media posts, carousels and banners",
+        "Creative poster, flyer and marketing design in brand colors",
+        "Professional marketing design and social media graphics in Tirupati"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:service:video-editing-ai-videos",
+      "identifier": "urn:air:heidigi.com:service:video-editing-ai-videos",
       "displayName": "Video Editing & AI Videos",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Reels, promo videos and AI-assisted production.",
-      "url": "https://heidigi.com/services/video-editing-ai-videos/"
+      "url": "https://heidigi.com/services/video-editing-ai-videos/",
+      "representativeQueries": [
+        "Short-form video and Instagram Reels editing service",
+        "AI-assisted business promotional video and motion graphics",
+        "Video editing agency for YouTube, Facebook and WhatsApp ads"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:service:branding",
+      "identifier": "urn:air:heidigi.com:service:branding",
       "displayName": "Branding",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "A clear visual identity and consistent positioning.",
-      "url": "https://heidigi.com/services/branding/"
+      "url": "https://heidigi.com/services/branding/",
+      "representativeQueries": [
+        "Brand identity, logo direction and typography design in Tirupati",
+        "Visual identity guidelines for new and growing businesses",
+        "Corporate rebranding and brand style guide services"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:service:personal-branding",
+      "identifier": "urn:air:heidigi.com:service:personal-branding",
       "displayName": "Personal Branding",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Content and positioning for doctors, founders and professionals.",
-      "url": "https://heidigi.com/services/personal-branding/"
+      "url": "https://heidigi.com/services/personal-branding/",
+      "representativeQueries": [
+        "Personal branding agency for doctors and founders in Andhra Pradesh",
+        "Executive LinkedIn and Instagram thought leadership content creation",
+        "How can healthcare professionals and entrepreneurs build a personal brand?"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:service:content-strategy",
+      "identifier": "urn:air:heidigi.com:service:content-strategy",
       "displayName": "Content Strategy",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Content pillars, calendars and campaign ideas tied to your goals.",
-      "url": "https://heidigi.com/services/content-strategy/"
+      "url": "https://heidigi.com/services/content-strategy/",
+      "representativeQueries": [
+        "Monthly content pillars and editorial calendar planning",
+        "Business storytelling, campaign scripts and content strategy",
+        "Strategic content marketing plan for local companies in Tirupati"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:location:tirupati",
+      "identifier": "urn:air:heidigi.com:location:tirupati",
       "displayName": "Digital Marketing in Tirupati",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Tirupati businesses serve residents, pilgrims, students, patients and nearby towns. The right marketing mix depends on who you need to reach and what they need to know before contacting you.",
-      "url": "https://heidigi.com/locations/tirupati/"
+      "url": "https://heidigi.com/locations/tirupati/",
+      "representativeQueries": [
+        "Best digital marketing company in Tirupati",
+        "Local SEO and social media marketing agency in Tirupati",
+        "Online marketing and lead generation services in Tirupati Andhra Pradesh"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:location:chittoor",
+      "identifier": "urn:air:heidigi.com:location:chittoor",
       "displayName": "Digital Marketing in Chittoor",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Businesses in Chittoor need marketing that reflects their real service area, not a page that swaps one town name for another. We plan the message around the products, services and customers the business actually serves.",
-      "url": "https://heidigi.com/locations/chittoor/"
+      "url": "https://heidigi.com/locations/chittoor/",
+      "representativeQueries": [
+        "Digital marketing services and local SEO in Chittoor",
+        "Social media marketing agency and Meta Ads in Chittoor district",
+        "Online marketing and Google profile management for Chittoor businesses"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:location:renigunta",
+      "identifier": "urn:air:heidigi.com:location:renigunta",
       "displayName": "Digital Marketing in Renigunta",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Renigunta businesses may serve local residents, travellers or customers moving between nearby towns. Useful marketing starts by stating what the business offers, where it operates and how customers can reach the team.",
-      "url": "https://heidigi.com/locations/renigunta/"
+      "url": "https://heidigi.com/locations/renigunta/",
+      "representativeQueries": [
+        "Digital marketing agency in Renigunta",
+        "Local search optimization and Google Maps ranking in Renigunta",
+        "Social media advertising and lead generation for Renigunta businesses"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:location:srikalahasti",
+      "identifier": "urn:air:heidigi.com:location:srikalahasti",
       "displayName": "Digital Marketing in Srikalahasti",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Srikalahasti is a major pilgrim and commercial center in South Andhra Pradesh, famous for its historic temple, brass handicrafts, Kalamkari textiles and local retail. Businesses here need marketing that captures both steady visitor intent and loyal local trade.",
-      "url": "https://heidigi.com/locations/srikalahasti/"
+      "url": "https://heidigi.com/locations/srikalahasti/",
+      "representativeQueries": [
+        "Digital marketing and SEO services in Srikalahasti",
+        "Google Business Profile management for Srikalahasti retail and hotels",
+        "Social media marketing and local ad agency in Srikalahasti"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:location:chandragiri",
+      "identifier": "urn:air:heidigi.com:location:chandragiri",
       "displayName": "Digital Marketing in Chandragiri",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Located just west of Tirupati, Chandragiri is an educational, agricultural and commercial gateway with colleges, residential communities and growing small enterprises. Marketing in Chandragiri requires building trust with local families and students.",
-      "url": "https://heidigi.com/locations/chandragiri/"
+      "url": "https://heidigi.com/locations/chandragiri/",
+      "representativeQueries": [
+        "Digital marketing agency in Chandragiri",
+        "Local SEO and business website design in Chandragiri",
+        "Social media marketing and ads for colleges and businesses in Chandragiri"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:location:madanapalle",
+      "identifier": "urn:air:heidigi.com:location:madanapalle",
       "displayName": "Digital Marketing in Madanapalle",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Madanapalle is a bustling commercial powerhouse in western South Andhra Pradesh, celebrated as Asia's largest tomato trading market and a thriving center for silk weaving, healthcare and higher education.",
-      "url": "https://heidigi.com/locations/madanapalle/"
+      "url": "https://heidigi.com/locations/madanapalle/",
+      "representativeQueries": [
+        "Top digital marketing services in Madanapalle",
+        "Local SEO, Google Ads and Meta Ads agency in Madanapalle",
+        "Online marketing for retail, healthcare and agriculture in Madanapalle"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:location:nellore",
+      "identifier": "urn:air:heidigi.com:location:nellore",
       "displayName": "Digital Marketing in Nellore",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "As the economic powerhouse of South Coastal Andhra Pradesh, Nellore is known for aquaculture, retail gold trade, healthcare excellence, agriculture and thriving industrial infrastructure along the Chennai-Kolkata corridor.",
-      "url": "https://heidigi.com/locations/nellore/"
+      "url": "https://heidigi.com/locations/nellore/",
+      "representativeQueries": [
+        "Leading digital marketing company in Nellore",
+        "Healthcare and commercial SEO agency in Nellore",
+        "Meta Ads and Google Business Profile optimization in Nellore"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:service:contact",
+      "identifier": "urn:air:heidigi.com:service:contact",
       "displayName": "Contact & Business Consultation",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Direct enquiry and digital marketing consultation for businesses in Tirupati and South Andhra Pradesh.",
-      "url": "https://heidigi.com/contact/"
+      "url": "https://heidigi.com/contact/",
+      "representativeQueries": [
+        "Contact digital marketing consultants in Tirupati",
+        "Book a free digital marketing consultation with Hei Digi",
+        "Get a quote for digital marketing, SEO and social media campaigns"
+      ]
     },
     {
-      "identifier": "urn:ai:heidigi.com:landing:digital-marketing-agency-in-tirupati",
+      "identifier": "urn:air:heidigi.com:landing:digital-marketing-agency-in-tirupati",
       "displayName": "Best Digital Marketing Agency in Tirupati",
-      "type": "text/html",
+      "type": "application/agent-card+json",
       "description": "Leading full-service digital marketing agency in Tirupati offering SEO, Google Business Profile management, Meta Ads, social media marketing, and website development.",
-      "url": "https://heidigi.com/digital-marketing-agency-in-tirupati/"
+      "url": "https://heidigi.com/digital-marketing-agency-in-tirupati/",
+      "representativeQueries": [
+        "Best digital marketing agency in Tirupati for small businesses",
+        "Top-rated full-service digital marketing agency in Tirupati",
+        "Hire full-service digital marketing company in Tirupati Andhra Pradesh"
+      ]
     }
   ]
 }

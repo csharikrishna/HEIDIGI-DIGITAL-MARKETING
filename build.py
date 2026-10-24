@@ -527,6 +527,92 @@ def write_ai_discovery():
     
     (R/"llms-full.txt").write_text("\n".join(full_blocks) + "\n", encoding="utf-8")
 
+    service_queries = {
+        "seo": [
+            "SEO services in Tirupati for local business rankings",
+            "Technical and on-page search engine optimization agency",
+            "How to improve website Google search rankings in Andhra Pradesh",
+        ],
+        "social-media-marketing": [
+            "Social media marketing agency for Instagram and Facebook in Tirupati",
+            "Monthly social media content calendar and Reels strategy",
+            "Instagram business page management and creative design",
+        ],
+        "google-business-profile-management": [
+            "Google Business Profile optimization and Maps 3-pack ranking in Tirupati",
+            "Manage local business listing, customer reviews and hours on Google",
+            "How do I rank higher on Google Maps in Andhra Pradesh?",
+        ],
+        "meta-ads": [
+            "Facebook and Instagram ads agency for lead generation in Tirupati",
+            "Run click-to-WhatsApp ad campaigns on Meta",
+            "Targeted paid social advertising for hospitals, schools and retail",
+        ],
+        "creative-design": [
+            "Graphic design services for social media posts, carousels and banners",
+            "Creative poster, flyer and marketing design in brand colors",
+            "Professional marketing design and social media graphics in Tirupati",
+        ],
+        "video-editing-ai-videos": [
+            "Short-form video and Instagram Reels editing service",
+            "AI-assisted business promotional video and motion graphics",
+            "Video editing agency for YouTube, Facebook and WhatsApp ads",
+        ],
+        "branding": [
+            "Brand identity, logo direction and typography design in Tirupati",
+            "Visual identity guidelines for new and growing businesses",
+            "Corporate rebranding and brand style guide services",
+        ],
+        "personal-branding": [
+            "Personal branding agency for doctors and founders in Andhra Pradesh",
+            "Executive LinkedIn and Instagram thought leadership content creation",
+            "How can healthcare professionals and entrepreneurs build a personal brand?",
+        ],
+        "content-strategy": [
+            "Monthly content pillars and editorial calendar planning",
+            "Business storytelling, campaign scripts and content strategy",
+            "Strategic content marketing plan for local companies in Tirupati",
+        ],
+    }
+
+    location_queries = {
+        "tirupati": [
+            "Best digital marketing company in Tirupati",
+            "Local SEO and social media marketing agency in Tirupati",
+            "Online marketing and lead generation services in Tirupati Andhra Pradesh",
+        ],
+        "chittoor": [
+            "Digital marketing services and local SEO in Chittoor",
+            "Social media marketing agency and Meta Ads in Chittoor district",
+            "Online marketing and Google profile management for Chittoor businesses",
+        ],
+        "renigunta": [
+            "Digital marketing agency in Renigunta",
+            "Local search optimization and Google Maps ranking in Renigunta",
+            "Social media advertising and lead generation for Renigunta businesses",
+        ],
+        "srikalahasti": [
+            "Digital marketing and SEO services in Srikalahasti",
+            "Google Business Profile management for Srikalahasti retail and hotels",
+            "Social media marketing and local ad agency in Srikalahasti",
+        ],
+        "chandragiri": [
+            "Digital marketing agency in Chandragiri",
+            "Local SEO and business website design in Chandragiri",
+            "Social media marketing and ads for colleges and businesses in Chandragiri",
+        ],
+        "madanapalle": [
+            "Top digital marketing services in Madanapalle",
+            "Local SEO, Google Ads and Meta Ads agency in Madanapalle",
+            "Online marketing for retail, healthcare and agriculture in Madanapalle",
+        ],
+        "nellore": [
+            "Leading digital marketing company in Nellore",
+            "Healthcare and commercial SEO agency in Nellore",
+            "Meta Ads and Google Business Profile optimization in Nellore",
+        ],
+    }
+
     ai_cat = {
         "specVersion": "1.0",
         "host": {
@@ -537,41 +623,55 @@ def write_ai_discovery():
         },
         "entries": [
             {
-                "identifier": f"urn:ai:heidigi.com:service:{s['slug']}",
+                "identifier": f"urn:air:heidigi.com:service:{s['slug']}",
                 "displayName": s["name"],
-                "type": "text/html",
+                "type": "application/agent-card+json",
                 "description": s["short"],
-                "url": U(f"/services/{s['slug']}/")
+                "url": U(f"/services/{s['slug']}/"),
+                "representativeQueries": service_queries[s["slug"]]
             } for s in S
         ] + [
             {
-                "identifier": f"urn:ai:heidigi.com:location:{loc['slug']}",
+                "identifier": f"urn:air:heidigi.com:location:{loc['slug']}",
                 "displayName": f"Digital Marketing in {loc['name']}",
-                "type": "text/html",
+                "type": "application/agent-card+json",
                 "description": loc['intro'],
-                "url": U(f"/locations/{loc['slug']}/")
+                "url": U(f"/locations/{loc['slug']}/"),
+                "representativeQueries": location_queries[loc["slug"]]
             } for loc in LOCATIONS
         ] + [
             {
-                "identifier": "urn:ai:heidigi.com:service:contact",
+                "identifier": "urn:air:heidigi.com:service:contact",
                 "displayName": "Contact & Business Consultation",
-                "type": "text/html",
+                "type": "application/agent-card+json",
                 "description": "Direct enquiry and digital marketing consultation for businesses in Tirupati and South Andhra Pradesh.",
-                "url": U("/contact/")
+                "url": U("/contact/"),
+                "representativeQueries": [
+                    "Contact digital marketing consultants in Tirupati",
+                    "Book a free digital marketing consultation with Hei Digi",
+                    "Get a quote for digital marketing, SEO and social media campaigns"
+                ]
             },
             {
-                "identifier": "urn:ai:heidigi.com:landing:digital-marketing-agency-in-tirupati",
+                "identifier": "urn:air:heidigi.com:landing:digital-marketing-agency-in-tirupati",
                 "displayName": "Best Digital Marketing Agency in Tirupati",
-                "type": "text/html",
+                "type": "application/agent-card+json",
                 "description": "Leading full-service digital marketing agency in Tirupati offering SEO, Google Business Profile management, Meta Ads, social media marketing, and website development.",
-                "url": U("/digital-marketing-agency-in-tirupati/")
+                "url": U("/digital-marketing-agency-in-tirupati/"),
+                "representativeQueries": [
+                    "Best digital marketing agency in Tirupati for small businesses",
+                    "Top-rated full-service digital marketing agency in Tirupati",
+                    "Hire full-service digital marketing company in Tirupati Andhra Pradesh"
+                ]
             }
         ]
     }
     cat_json = json.dumps(ai_cat, indent=2) + "\n"
     (R/"ai-catalog.json").write_text(cat_json, encoding="utf-8")
+    (R/"ard.json").write_text(cat_json, encoding="utf-8")
     well_known = R/".well-known"; well_known.mkdir(parents=True, exist_ok=True)
     (well_known/"ai-catalog.json").write_text(cat_json, encoding="utf-8")
+    (well_known/"ard.json").write_text(cat_json, encoding="utf-8")
 
 def security_expires():
     sec = R/".well-known"/"security.txt"
@@ -595,7 +695,7 @@ def copy_public_output():
         rel = Path("404.html") if path == "/404.html" else (Path("index.html") if path == "/" else Path(path.strip("/"))/"index.html")
         target = dist/rel; target.parent.mkdir(parents=True, exist_ok=True); target.write_text(markup, encoding="utf-8")
     shutil.copytree(R/"assets", dist/"assets", dirs_exist_ok=True)
-    for name in ("sitemap.xml", "robots.txt", "manifest.webmanifest", "favicon.ico", "llms.txt", "llms-full.txt", "ai-catalog.json"):
+    for name in ("sitemap.xml", "robots.txt", "manifest.webmanifest", "favicon.ico", "llms.txt", "llms-full.txt", "ai-catalog.json", "ard.json"):
         if (R/name).exists():
             shutil.copy2(R/name, dist/name)
     if (R/".well-known"/"security.txt").exists():
@@ -604,6 +704,9 @@ def copy_public_output():
     if (R/".well-known"/"ai-catalog.json").exists():
         aic = dist/".well-known"/"ai-catalog.json"; aic.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(R/".well-known"/"ai-catalog.json", aic)
+    if (R/".well-known"/"ard.json").exists():
+        ard = dist/".well-known"/"ard.json"; ard.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(R/".well-known"/"ard.json", ard)
     # Do not copy source reports, build scripts, JSON config, API helper files or content databases into dist.
     return dist
 

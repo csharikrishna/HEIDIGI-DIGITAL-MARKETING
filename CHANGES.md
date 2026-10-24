@@ -45,7 +45,8 @@ The Hei Digi website was upgraded from a static prototype with cross-platform bu
 ### 3.2. AI Search & Answer Engine Optimization (AEO)
 - **`llms.txt`**: Standardized, human- and machine-readable markdown overview of Hei Digi, outlining core services, target markets (Tirupati, Renigunta, Chittoor), contact points, and verified disclaimers.
 - **`llms-full.txt`**: Complete knowledge repository compiling in-depth service descriptions, industry marketing playbooks, pricing guidance, and FAQs into a single crawlable document for LLM ingestion.
-- **`/.well-known/ai-catalog.json`**: Machine-readable agent capability descriptor detailing available services and API interaction points.
+- **`/.well-known/ai-catalog.json` & `ard.json`**: Agentic Resource Discovery (ARD) specification-compliant manifest with RFC 8141 domain-anchored URNs (`urn:air:heidigi.com:<namespace>:<name>`), standard `application/agent-card+json` discovery media type, and vector embedding `representativeQueries`.
+- **WCAG AA Color Contrast**: Enhanced floating WhatsApp CTA (`.wa-float` / `.wa-float b`) background to `#075E54` and `#054C44` on hover with crisp `#FFFFFF` typography, delivering a 7.67:1 contrast ratio passing WCAG AAA requirements.
 - **RFC 9309-Compliant `robots.txt`**: Configured dedicated user-agent blocks for:
   - *AI Assistants & Search Crawlers*: `OAI-SearchBot`, `ChatGPT-User`, `GPTBot`, `ClaudeBot`, `anthropic-ai`, `PerplexityBot`, `Google-Extended`, `Applebot-Extended`.
   - *Social Preview Bots*: `Twitterbot`, `facebookexternalhit`, `LinkedInBot`, `WhatsApp`, `TelegramBot`.

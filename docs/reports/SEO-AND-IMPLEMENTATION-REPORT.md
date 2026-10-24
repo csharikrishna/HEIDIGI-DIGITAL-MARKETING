@@ -157,11 +157,12 @@ Located at `/llms.txt` and `/llms-full.txt`, these structured markdown documents
 - Verified business NAP, phone, email, and founder attribution.
 - Direct links to authoritative subpages.
 
-### 4.2 Machine-Readable Service Catalog (`.well-known/ai-catalog.json`)
-Adhering to the AI Service Catalog specification (`specVersion 1.0`), `/ai-catalog.json` and `/.well-known/ai-catalog.json` declare:
+### 4.2 Machine-Readable Agentic Resource Discovery Manifest (`.well-known/ai-catalog.json` & `ard.json`)
+Adhering 100% to the Agentic Resource Discovery (ARD) specification (`specVersion 1.0`), `/ai-catalog.json`, `/.well-known/ai-catalog.json`, and `/.well-known/ard.json` declare:
 - Verified decentralized identifier (`did:web:heidigi.com`).
-- Direct endpoint mapping to canonical service routes.
-- Plain-text functional descriptions optimized for RAG embeddings and tool-calling agent systems.
+- RFC 8141 domain-anchored URNs conforming to pattern `urn:air:<publisher>:<namespace>:<agent-name>` (e.g., `urn:air:heidigi.com:service:seo`).
+- Standard ARD discovery media type `application/agent-card+json`.
+- High-relevance `representativeQueries` (2-5 natural language sample queries per resource) for vector index embedding and semantic agent routing.
 
 ### 4.3 AI Crawler Permissions
 `robots.txt` establishes explicit crawl permissions for leading AI search engines:
