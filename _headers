@@ -13,10 +13,12 @@
 /assets/js/*
   Cache-Control: public, max-age=31536000, immutable
 /assets/fonts/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=31536000, immutable
 /assets/og/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=2592000
 /assets/work/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=31536000, immutable
 /assets/clients/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

@@ -171,7 +171,7 @@ def head(title, desc, path, ogimg, ld=(), index=True):
 <html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{t}</title><meta name="description" content="{d}">{robots}<meta name="theme-color" content="#0b0a2e">
 <meta name="geo.region" content="{esc(GEO_REGION)}"><meta name="geo.placename" content="{esc(GEO_PLACENAME)}"><meta name="geo.position" content="{LAT};{LNG}"><meta name="ICBM" content="{LAT}, {LNG}">
-<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="/assets/favicon-32x32.png" type="image/png" sizes="32x32"><link rel="icon" href="/assets/favicon-16x16.png" type="image/png" sizes="16x16"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="/assets/favicon-32x32.png" type="image/png" sizes="32x32"><link rel="icon" href="/assets/favicon-16x16.png" type="image/png" sizes="16x16"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><link rel="service-desc" type="application/ai-catalog+json" href="/.well-known/ai-catalog.json"><link rel="alternate" type="application/ai-catalog+json" href="/.well-known/ai-catalog.json" title="AI Agent Resource Discovery">
 {og_}{fontlinks()}{f'<link rel="preload" as="image" href="{av('/assets/work/hero-reel.webp')}" fetchpriority="high">' if path == '/' else ''}<link rel="stylesheet" href="{av('/assets/css/style.css')}"><script src="{av('/assets/js/boot.js')}"></script>
 {"".join(jl(x) for x in ld)}</head>'''
 LOGO = '<img class="brand-mark" src="/assets/heidigi-logo.webp" width="40" height="40" alt="" aria-hidden="true" decoding="async">'
@@ -485,6 +485,11 @@ def write_ai_discovery():
 ## Featured Authority Guides
 
 - [Best Digital Marketing Agency in Tirupati]({U('/digital-marketing-agency-in-tirupati/')}): Comprehensive guide to digital marketing services, SEO, Meta Ads, social media marketing, and website design for businesses in Tirupati and Andhra Pradesh.
+
+## AI Agent Discovery & Capabilities
+
+- [Agentic Resource Discovery (ARD) Manifest]({U('/.well-known/ai-catalog.json')}): Machine-readable ARD capability manifest with RFC 8141 domain-anchored URNs and semantic representative queries.
+- [ARD Capability Catalog]({U('/ai-catalog.json')}): Capability catalog for autonomous AI agents and registry crawlers.
 
 ## Legal & Compliance Policies
 
@@ -868,9 +873,17 @@ def headers():
     return h
 
 def write_headers():
-    IMM, WEEK = "public, max-age=31536000, immutable", "public, max-age=604800"
+    IMM, MONTH = "public, max-age=31536000, immutable", "public, max-age=2592000"
     h = headers(); host = DOM.split("//")[1]; alt = host[4:] if host.startswith("www.") else "www." + host
-    cache = [("/assets/css/*", IMM), ("/assets/js/*", IMM), ("/assets/fonts/*", WEEK), ("/assets/og/*", WEEK), ("/assets/work/*", WEEK), ("/assets/clients/*", WEEK)]
+    cache = [
+        ("/assets/css/*", IMM),
+        ("/assets/js/*", IMM),
+        ("/assets/fonts/*", IMM),
+        ("/assets/og/*", MONTH),
+        ("/assets/work/*", IMM),
+        ("/assets/clients/*", IMM),
+        ("/assets/*", IMM),
+    ]
     (R/"_headers").write_text("# Generated headers for non-Vercel static hosts. Vercel uses vercel.json.\n/*\n" + "".join(f"  {k}: {v}\n" for k, v in h) + "".join(f"{p}\n  Cache-Control: {c}\n" for p, c in cache), encoding="utf-8")
     vc = {"outputDirectory": "dist", "cleanUrls": False, "trailingSlash": True,
           "headers": [{"source": "/(.*)", "headers": [{"key": k, "value": v} for k, v in h]}] + [{"source": p.replace("/*", "/(.*)"), "headers": [{"key": "Cache-Control", "value": c}]} for p, c in cache],

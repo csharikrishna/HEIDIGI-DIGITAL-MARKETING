@@ -161,11 +161,20 @@ ok((PUBLIC/".well-known/security.txt").exists(), "security.txt is missing")
 ok((PUBLIC/"llms.txt").exists(), "llms.txt is missing from dist")
 ok((PUBLIC/"llms-full.txt").exists(), "llms-full.txt is missing from dist")
 ok((PUBLIC/".well-known/ai-catalog.json").exists(), ".well-known/ai-catalog.json is missing from dist")
+ok((PUBLIC/"ai-catalog.json").exists(), "ai-catalog.json is missing from dist")
+ok((PUBLIC/".well-known/ard.json").exists(), ".well-known/ard.json is missing from dist")
+ok((PUBLIC/"ard.json").exists(), "ard.json is missing from dist")
 cat_p = PUBLIC/".well-known/ai-catalog.json"
 if cat_p.exists():
     try:
         cat_data = json.loads(cat_p.read_text(encoding="utf-8"))
         ok(cat_data.get("specVersion") == "1.0", "ai-catalog.json missing or invalid specVersion")
+        host = cat_data.get("host")
+        ok(isinstance(host, dict), "ai-catalog.json missing host object")
+        ok(bool(host.get("displayName")), "ai-catalog.json host missing displayName")
+        ok(host.get("identifier", "").startswith("did:web:"), "ai-catalog.json host identifier must start with did:web:")
+        ok(bool(host.get("documentationUrl")), "ai-catalog.json host missing documentationUrl")
+        ok(bool(host.get("logoUrl")), "ai-catalog.json host missing logoUrl")
         entries = cat_data.get("entries", [])
         ok(isinstance(entries, list) and len(entries) > 0, "ai-catalog.json entries must be non-empty list")
         urn_pat = re.compile(r"^urn:air:[a-zA-Z0-9.-]+(:[a-zA-Z0-9._-]+)+$")
@@ -220,7 +229,7 @@ def lum(h):
     r,g,b=[conv(x) for x in rgb]; return .2126*r+.7152*g+.0722*b
 def cr(a,b):
     x,y=sorted((lum(a),lum(b)),reverse=True); return (x+.05)/(y+.05)
-for fg,bg,label in [("#4A5878","#F6F9FF","body/ice"),("#4A5878","#EAF0FB","body/mist"),("#4A5878","#FFFFFF","body/card"),("#2F5BEA","#FFFFFF","link/white"),("#FFFFFF","#2F5BEA","button/blue"),("#0A1633","#F6F9FF","heading/ice"),("#0A1633","#FFFFFF","heading/white"),("#FFFFFF","#0B1F4D","footer/white")]:
+for fg,bg,label in [("#4A5878","#F6F9FF","body/ice"),("#4A5878","#EAF0FB","body/mist"),("#4A5878","#FFFFFF","body/card"),("#2F5BEA","#FFFFFF","link/white"),("#FFFFFF","#2F5BEA","button/blue"),("#0A1633","#F6F9FF","heading/ice"),("#0A1633","#FFFFFF","heading/white"),("#FFFFFF","#0B1F4D","footer/white"),("#FFFFFF","#075E54","wa-float/green"),("#FFFFFF","#054C44","wa-float:hover/darkgreen")]:
     ok(cr(fg,bg)>=4.5, f"contrast {label}: {cr(fg,bg):.2f}:1")
 # Service FAQ is visible by generator construction, count confirmed in the service template source.
 # No fake reviews/ratings. Search code output for AggregateRating.

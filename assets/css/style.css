@@ -255,8 +255,9 @@ footer nav ul{padding:0;display:grid;gap:6px;list-style:none}
 @media(prefers-reduced-motion:reduce){.track{animation:none!important;transform:none!important;width:100%;overflow-x:auto;mask-image:none}.track ul[aria-hidden="true"]{display:none}.hero-media-card,.btn,.card{transition:none!important}}
 
 /* Final contrast and responsive image-card fixes. */
-.wa-float,.wa-float b,.wa-float:visited,.wa-float:active,.wa-float:focus{color:#fff!important}
-.wa-float:hover b,.wa-float:visited b,.wa-float:active b,.wa-float:focus b{color:#fff!important}
+.wa-float,.wa-float:link,.wa-float:visited,.wa-float:hover,.wa-float:active,.wa-float:focus{color:#fff!important}
+.wa-float b,.wa-float:link b,.wa-float:visited b,.wa-float:hover b,.wa-float:active b,.wa-float:focus b{color:#fff!important}
+.wa-float:focus-visible{outline:3px solid #fff;outline-offset:3px}
 
 .hero-media-card img{object-fit:cover}
 @media(max-width:1150px) and (min-width:961px){header nav{gap:8px;font-size:.76rem}header .btn.cta{padding:8px 10px;font-size:.75rem}.logo b{font-size:1rem}}

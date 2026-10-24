@@ -61,6 +61,11 @@
 
 - [Best Digital Marketing Agency in Tirupati](https://heidigi.com/digital-marketing-agency-in-tirupati/): Comprehensive guide to digital marketing services, SEO, Meta Ads, social media marketing, and website design for businesses in Tirupati and Andhra Pradesh.
 
+## AI Agent Discovery & Capabilities
+
+- [Agentic Resource Discovery (ARD) Manifest](https://heidigi.com/.well-known/ai-catalog.json): Machine-readable ARD capability manifest with RFC 8141 domain-anchored URNs and semantic representative queries.
+- [ARD Capability Catalog](https://heidigi.com/ai-catalog.json): Capability catalog for autonomous AI agents and registry crawlers.
+
 ## Legal & Compliance Policies
 
 - [Privacy Policy](https://heidigi.com/privacy/): Data protection standards under India's Digital Personal Data Protection Act (DPDPA 2023).
